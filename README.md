@@ -19,5 +19,30 @@ Das Programm soll folgende Eingabemethoden unterstützen:
 * Eingabe über ein Bedienfenster (klick button to play sound)
 * Anbindung an MQTT (select / play sound, report playback to MQTT channel)
 
+# Installation
+Installationsvorraussetzungen:
+1. Python 3.12
+2. poetry
+3. rabbitmq
+
+*Pakete installieren*
+```bash
+poetry install
+```
+
+*Server starten (Entwicklungsumgebung)*
+```bash
+# Beispiel: Rabbitmq via docker starten
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-management
+
+# Sounddateien erfassen
+poetry run soundshouter initdb ~/sounds
+
+# Server ausführen
+#  - API: http://127.0.0.1:5000
+#  - API docs: http://127.0.0.1:5000/docs
+poetry run soundshouter server
+```
+
 
 
