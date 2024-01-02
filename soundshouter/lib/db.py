@@ -1,5 +1,5 @@
 from typing import List
-from sqlalchemy import ForeignKey, String, Float
+from sqlalchemy import ForeignKey, String, Float, UniqueConstraint
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -52,11 +52,16 @@ class Category(Base):
 
 class SubCategory(Base):
     __tablename__ = 'subcategory'
+    __table_args__ = (
+        UniqueConstraint("category_id", "name"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    category_id: Mapped[int] = mapped_column(ForeignKey("category.id"))
     name: Mapped[str] = mapped_column(String(50), unique=True)
 
     sound: Mapped[List["Sound"]] = relationship(back_populates="subcategory")
+    category: Mapped["Category"] = relationship()
 
     def __repr__(self):
         return f"<SubCategory(id={self.id} name={self.name})>"

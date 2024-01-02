@@ -60,10 +60,9 @@ async def queue_play_sound(sound_id: int, db=Depends(get_db)):
     db_sound = result.first()[0]
 
     if not db_sound:
-        return HTTPException(status_code=404, detail="Sound not found")
+        return f"Sound {sound_id} not found"
 
     await play_async(db_sound.path)
-
     return f"playing {db_sound.name}"
 
 

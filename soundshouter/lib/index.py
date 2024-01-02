@@ -80,10 +80,11 @@ def create_entrys(engine, sounds: List[Sound]):
 
                 subcategory = None
                 if snd.subcategory:
-                    subcat_query = select(SubCategory).filter_by(name=snd.subcategory)
+                    subcat_query = select(SubCategory)\
+                        .filter_by(name=snd.subcategory, category_id=category.id)
                     subcategory = session.execute(subcat_query).first()
                     if not subcategory:
-                        subcategory = SubCategory(name=snd.subcategory)
+                        subcategory = SubCategory(name=snd.subcategory, category_id=category.id)
                         session.add(subcategory)
                     else:
                         subcategory = subcategory[0]

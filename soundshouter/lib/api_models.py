@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -7,8 +9,8 @@ class Sound(BaseModel):
     # path: str
     duration: float
     play_count: int
-    # category_id: int
-    # subcategory_id: int
+    category_id: int
+    subcategory_id: Optional[int]
     # category: str
     # subcategory: str
 
@@ -27,6 +29,7 @@ class Category(BaseModel):
 class Subcategory(BaseModel):
     id: int
     name: str
+    category_id: Optional[int]
 
     class Config:
         from_attributes = True
