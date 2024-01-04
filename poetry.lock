@@ -288,6 +288,8 @@ python-versions = ">=3.8"
 files = [
     {file = "faststream-0.3.11-py3-none-any.whl", hash = "sha256:3f5663d6ec3b118853885ee0f426c07b8181ff9e6562b5cff5d26f70531b3083"},
     {file = "faststream-0.3.11.tar.gz", hash = "sha256:2fb93d4ffa667b1e4ba6b7740a6b17be81cd32a1d66abb1ab4f2f80cb419ab94"},
+    {file = "faststream-0.3.9-py3-none-any.whl", hash = "sha256:f100f763dda61d985f6cb486c9e2189d1e07f24599b57aff7dc1a4f0f031e39f"},
+    {file = "faststream-0.3.9.tar.gz", hash = "sha256:badd7590b59759b6caa08cbb12f57154d20d7dee1a715238305474ac07dabef0"},
 ]
 
 [package.dependencies]
@@ -295,6 +297,7 @@ anyio = ">=3.7.1,<5"
 fast-depends = ">=2.2.6,<3"
 typer = ">=0.9,<1"
 typing-extensions = ">=4.8.0"
+uvloop = {version = ">=0.18.0", markers = "(sys_platform != \"win32\" and sys_platform != \"cygwin\") and platform_python_implementation != \"PyPy\""}
 
 [package.extras]
 dev = ["detect-secrets (==1.4.0)", "faststream[devdocs,docs,kafka,lint,nats,rabbit,redis,testing]", "pre-commit (==3.5.0)", "pre-commit (==3.6.0)"]
