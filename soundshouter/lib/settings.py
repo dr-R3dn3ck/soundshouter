@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     rabbitmq_url: str = "amqp://localhost:5672"
     rabbitmq_username: str = "guest"
     rabbitmq_password: str = "guest"
-    max_consumers: int = 5
+    max_consumers: int = 100
 
     def db_url(self, _async=True) -> str:
         return f"sqlite{'+aiosqlite' if _async else ''}:///{self.database_path}/soundshouter.db"

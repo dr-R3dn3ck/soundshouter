@@ -20,8 +20,6 @@ pydantic-settings = "^2.1.0"
 requests = "^2.31.0"
 customtkinter = "^5.2.1"
 packaging = "^23.2"
-
-[tool.poetry.group.dev.dependencies]
 uvicorn = "^0.24.0.post1"
 
 [build-system]
