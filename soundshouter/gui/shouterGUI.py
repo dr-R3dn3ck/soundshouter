@@ -23,15 +23,15 @@ class SoundboardApp:
     #     self.request_sounds()
 
     def request_sounds(self):
-        r = requests.get(f'{self.api_url}/sounds')
+        r = requests.get(f'{self.api_url}/sounds?limit=-1')
         return r.json()
 
     def request_categories(self):
-        r = requests.get(f'{self.api_url}/categories')
+        r = requests.get(f'{self.api_url}/categories?limit=-1')
         return r.json()
 
     def request_subcategories(self):
-        r = requests.get(f'{self.api_url}/subcategories')
+        r = requests.get(f'{self.api_url}/subcategories?limit=-1')
         return r.json()
 
     def create_widgets(self):
@@ -73,8 +73,8 @@ class SoundboardApp:
         customtkinter.CTkLabel(self.frame_right, text="Subcatergorie:", fg_color="grey", text_color="blue", font=("Courier", 12)).place(relx=0.05, rely=0.6, anchor="nw")
         self.combobox_subcat = customtkinter.CTkComboBox(master=self.frame_right,
                                      values=[],
-                                     command=self.get_subcategorie,
-                                     variable="categorie")
+                                     command=self.get_categorie,
+                                     variable="subcategorie")
         self.combobox_subcat.place(relx=0.05, rely=0.65, anchor="nw")
 
         # Create quit button
@@ -88,24 +88,45 @@ class SoundboardApp:
         self.callback("")
 
     def get_categorie(self, t):
+        self.build_buttons()
+            
+    def extract_id_cat(self, name):
         # Get id for selected categorie
         for cat in self.categories:
-            if cat["name"] == t:
+            if cat["name"] == name:
+                return cat["id"]
+            
+    def extract_id_subcat(self, name):
+        # Get id for selected categorie
+        for cat in self.subcategories:
+            if cat["name"] == name:
                 return cat["id"]
 
-    def get_subcategorie(self, t):
-        # TODO CALLED WHJEN CAT IS CHOSEN USER HERE TO CALL BUILD BUTTONS
-        # Get id for selected subcategorie
-        for subcat in self.subcategories:
-            if subcat["name"] == t:
-                return subcat["id"]
-
     def build_buttons(self):
-        #print(self.combobox_cat.get())
-        # pack buttons in scroll view
-        for sound in self.sounds:
-            customtkinter.CTkButton(self.frame_left, text=f'{sound["name"]}({sound["play_count"]})', command= lambda t=sound["id"]: self.play_sound(t)).pack(side=tk.BOTTOM, padx=10, pady=2, fill="x")
+        # cleanup
+        for widget in self.frame_left.winfo_children():
+            widget.destroy() 
 
+        catid = self.extract_id_cat(self.combobox_cat.get())
+        subcatid = self.extract_id_subcat(self.combobox_subcat.get())
+
+        # pack buttons in scroll view
+        if catid is not None and subcatid is not None:
+            for sound in self.sounds:
+                if sound["category_id"] == catid and sound["subcategory_id"] == subcatid:
+                    customtkinter.CTkButton(self.frame_left, text=f'{sound["name"]}({sound["play_count"]})', command= lambda t=sound["id"]: self.play_sound(t)).pack(side=tk.BOTTOM, padx=10, pady=2, fill="x")
+        elif catid is not None and subcatid is None:
+            for sound in self.sounds:
+                if sound["category_id"] == catid:
+                    customtkinter.CTkButton(self.frame_left, text=f'{sound["name"]}({sound["play_count"]})', command= lambda t=sound["id"]: self.play_sound(t)).pack(side=tk.BOTTOM, padx=10, pady=2, fill="x")
+        elif catid is None and subcatid is not None:
+            for sound in self.sounds:
+                if sound["subcategory_id"] == subcatid:
+                    customtkinter.CTkButton(self.frame_left, text=f'{sound["name"]}({sound["play_count"]})', command= lambda t=sound["id"]: self.play_sound(t)).pack(side=tk.BOTTOM, padx=10, pady=2, fill="x")
+        else:
+            for sound in self.sounds:
+                customtkinter.CTkButton(self.frame_left, text=f'{sound["name"]}({sound["play_count"]})', command= lambda t=sound["id"]: self.play_sound(t)).pack(side=tk.BOTTOM, padx=10, pady=2, fill="x")
+        
     def extract_cat(self):
         cat_list = []
         for entry in self.categories:
@@ -124,7 +145,10 @@ class SoundboardApp:
             # request infos from openapi
             self.sounds = self.request_sounds()
             self.categories = self.request_categories()
-            self.subcategories = self.request_subcategories()
+            try:
+                self.subcategories = self.request_subcategories()
+            except:
+                self.subcategories = []
 
             # cleanup
             for widget in self.frame_left.winfo_children():
