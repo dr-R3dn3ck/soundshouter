@@ -1,4 +1,13 @@
-<script></script>
+<script setup>
+import { onMounted } from 'vue'
+import { initFlowbite } from 'flowbite'
+
+// initialize components based on data attribute selectors
+onMounted(() => {
+    initFlowbite();
+})
+
+</script>
 
 <template>
     <nav class="bg-white border-gray-200 dark:bg-gray-900">
