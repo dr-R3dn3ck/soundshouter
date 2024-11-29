@@ -281,15 +281,13 @@ all = ["email-validator (>=2.0.0)", "httpx (>=0.23.0)", "itsdangerous (>=1.1.0)"
 
 [[package]]
 name = "faststream"
-version = "0.3.11"
+version = "0.3.12"
 description = "FastStream: the simplest way to work with a messaging queues"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "faststream-0.3.11-py3-none-any.whl", hash = "sha256:3f5663d6ec3b118853885ee0f426c07b8181ff9e6562b5cff5d26f70531b3083"},
-    {file = "faststream-0.3.11.tar.gz", hash = "sha256:2fb93d4ffa667b1e4ba6b7740a6b17be81cd32a1d66abb1ab4f2f80cb419ab94"},
-    {file = "faststream-0.3.9-py3-none-any.whl", hash = "sha256:f100f763dda61d985f6cb486c9e2189d1e07f24599b57aff7dc1a4f0f031e39f"},
-    {file = "faststream-0.3.9.tar.gz", hash = "sha256:badd7590b59759b6caa08cbb12f57154d20d7dee1a715238305474ac07dabef0"},
+    {file = "faststream-0.3.12-py3-none-any.whl", hash = "sha256:d2961419f85211e9a3c640225677504fb893ab524964a835f7f8ed41471b5a5d"},
+    {file = "faststream-0.3.12.tar.gz", hash = "sha256:55977ed898cd9eabc770842d2870de4839424f58ee46add27f8aab7e6d3ae1cf"},
 ]
 
 [package.dependencies]
@@ -297,19 +295,18 @@ anyio = ">=3.7.1,<5"
 fast-depends = ">=2.2.6,<3"
 typer = ">=0.9,<1"
 typing-extensions = ">=4.8.0"
-uvloop = {version = ">=0.18.0", markers = "(sys_platform != \"win32\" and sys_platform != \"cygwin\") and platform_python_implementation != \"PyPy\""}
 
 [package.extras]
 dev = ["detect-secrets (==1.4.0)", "faststream[devdocs,docs,kafka,lint,nats,rabbit,redis,testing]", "pre-commit (==3.5.0)", "pre-commit (==3.6.0)"]
-devdocs = ["black (==23.12.0)", "cairosvg (==2.7.1)", "mdx-include (==1.4.2)", "mike (==2.0.0)", "mkdocs-git-revision-date-localized-plugin (==1.2.1)", "mkdocs-glightbox (==0.3.5)", "mkdocs-literate-nav (==0.6.1)", "mkdocs-macros-plugin (==1.0.5)", "mkdocs-material (==9.5.2)", "mkdocs-minify-plugin (==0.7.1)", "mkdocs-static-i18n (==1.2.0)", "mkdocstrings[python] (==0.24.0)", "pillow (==10.1.0)", "requests"]
+devdocs = ["black (==23.12.0)", "cairosvg (==2.7.1)", "mdx-include (==1.4.2)", "mike (==2.0.0)", "mkdocs-git-revision-date-localized-plugin (==1.2.1)", "mkdocs-glightbox (==0.3.6)", "mkdocs-literate-nav (==0.6.1)", "mkdocs-macros-plugin (==1.0.5)", "mkdocs-material (==9.5.3)", "mkdocs-minify-plugin (==0.7.1)", "mkdocs-static-i18n (==1.2.0)", "mkdocstrings[python] (==0.24.0)", "pillow (==10.1.0)", "requests"]
 docs = ["fastapi (>=0.100.0,<1.0.0)", "uvicorn (>=0.17.0,<1.0.0)"]
-kafka = ["aiokafka (>=0.9,<0.10)"]
-lint = ["bandit (==1.7.6)", "mypy (==1.8.0)", "pyupgrade-directories (==0.3.0)", "ruff (==0.1.8)", "semgrep (==1.52.0)", "types-docutils", "types-pygments", "types-pyyaml", "types-redis", "types-setuptools", "types-ujson"]
+kafka = ["aiokafka (>=0.9,<0.11)"]
+lint = ["bandit (==1.7.6)", "mypy (==1.8.0)", "pyupgrade-directories (==0.3.0)", "ruff (==0.1.9)", "semgrep (==1.52.0)", "types-docutils", "types-pygments", "types-pyyaml", "types-redis", "types-setuptools", "types-ujson"]
 nats = ["nats-py (>=2.3.1,<3.0.0)"]
 rabbit = ["aio-pika (>=9,<10)"]
 redis = ["redis (>=5.0.0,<6.0.0)"]
-test-core = ["coverage[toml] (==7.3.2)", "dirty-equals (==0.7.1.post0)", "pytest (==7.4.3)", "pytest-asyncio (==0.23.2)"]
-testing = ["email-validator (==2.1.0.post1)", "fastapi (==0.105.0)", "faststream[test-core]", "httpx (==0.25.2)", "pydantic-settings (==2.1.0)", "pyyaml (==6.0.1)", "watchfiles (==0.21.0)"]
+test-core = ["coverage[toml] (==7.4.0)", "dirty-equals (==0.7.1.post0)", "pytest (==7.4.4)", "pytest-asyncio (==0.23.2)"]
+testing = ["email-validator (==2.1.0.post1)", "fastapi (==0.108.0)", "faststream[test-core]", "httpx (==0.26.0)", "pydantic-settings (==2.1.0)", "pyyaml (==6.0.1)", "watchfiles (==0.21.0)"]
 
 [[package]]
 name = "greenlet"
