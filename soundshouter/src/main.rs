@@ -57,6 +57,7 @@ fn main() {
     println!("{args:?}");
 
     let (dirs, conf) = init_app().expect("failed to init app");
+    log4rs::init_file(&dirs.log_conf, Default::default()).unwrap();
     println!("{:?}", conf);
     println!("{:?}", dirs);
 

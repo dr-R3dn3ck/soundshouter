@@ -31,7 +31,7 @@ impl AppState {
     }
 
     fn wait(&mut self) {
-        if let Some(pthread) = self.player_thread.take() {
+        if let Some(pthread) = self.api_thread.take() {
             pthread.join().unwrap();
         } else {
             println!("No player thread to wait for");

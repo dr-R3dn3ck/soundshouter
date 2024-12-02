@@ -12,6 +12,7 @@ pub struct DirConfig {
     pub(crate) queue_conf: PathBuf,
     pub(crate) config_dir: PathBuf,
     pub(crate) data_dir: PathBuf,
+    pub(crate) log_conf: PathBuf,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -71,6 +72,10 @@ pub fn init_app() -> Result<(DirConfig, Config), io::Error> {
         create_api_config(&rocket_conf, &config.general.db_uri)?;
     }
 
+    let log_conf = proj_dirs.config_dir().join("log4rs.yml");
+    if !log_conf.exists() {
+        create_log_config(&log_conf);
+    };
     std::env::set_var("ROCKET_CONFIG", &rocket_conf);
 
     Ok((DirConfig {
@@ -78,7 +83,29 @@ pub fn init_app() -> Result<(DirConfig, Config), io::Error> {
         queue_conf,
         config_dir,
         data_dir: data_path,
+        log_conf
     }, config))
+}
+
+fn create_log_config(pth: &PathBuf) -> Result<(), io::Error> {
+    let config = r#"
+appenders:
+  stdout:
+    kind: console
+root:
+  level: warn
+  appenders:
+    - stdout
+loggers:
+  rumqttd::router::routing: { level: off }
+  rumqttd::server::broker: { level: off }
+  rocket: { level: info }
+  soundshouter: { level: info }
+"#;
+    let mut file = File::create(pth)?;
+    file.write_all(config.as_bytes())?;
+
+    Ok(())
 }
 
 fn create_default_config(pth: &PathBuf, data_pth: &PathBuf) -> Result<Config, io::Error> {

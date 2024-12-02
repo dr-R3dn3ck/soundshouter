@@ -3,7 +3,7 @@ use std::io;
 use std::fs::{self, DirEntry, File};
 use std::io::BufReader;
 use std::path::Path;
-use log::{error, info};
+use log::{error, info, debug};
 use rodio::Source;
 use crate::db::{establish_connection, get_or_create_category, get_or_create_sound, get_or_create_subcategory};
 use crate::db::models;
@@ -48,7 +48,7 @@ pub fn import_sounds(src: &PathBuf, dest: &PathBuf, db_uri: &String) {
                         duration.as_secs_f32()
                     }
                     else { 0.0 };
-                    println!("{:?}", duration);
+                    debug!("duration of {:?}: {:?}", duration, entry.path());
                     // TODO: copy sound and store destination path in database
                     let res = get_or_create_sound(&mut db,
                                                   sound_name, soundfile.to_str().unwrap(),
