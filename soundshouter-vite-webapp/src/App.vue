@@ -6,7 +6,7 @@
     <NavBar />
   </header>
 
-  <body class="min-h-screen max-h-screen dark:bg-gray-800">
+  <body class="px-20 min-h-screen max-h-screen width dark:bg-gray-800">
     <SoundTable>
       <SoundElement v-for="sound in sndObject" 
       :title="sound.title" 
