@@ -1,16 +1,15 @@
-use std::net::{IpAddr, Ipv4Addr};
 use crate::db::models::{Category, Sound, SubCategory};
 use crate::error::AppError;
 
-use log::{debug, error};
+use log::{debug};
 
 use rocket;
-use rocket::{get, post, routes, Config};
+use rocket::{get, post, routes};
 use rocket::serde::json::Json;
-use rocket::serde::{Serialize, Deserialize};
+use rocket::serde::{Serialize};
 use rocket::tokio::{task, time};
 
-use rumqttc::{AsyncClient, Event, Incoming, MqttOptions, QoS, Outgoing, Publish};
+use rumqttc::{AsyncClient, Event, MqttOptions, QoS, Outgoing};
 use std::time::Duration;
 
 use utoipa::{OpenApi};
@@ -47,7 +46,8 @@ fn index() -> Result<Json<Health>, AppError> {
     get,
     path="/api/v1/sounds",
     params(
-        ("limit" = Option<u32>, Query, minimum = 1, maximum = 1000, description = "limit list length (default 10 if not set)"),
+        ("limit" = Option<u32>, Query, minimum = 1, maximum = 1000,
+        description = "limit list length (default 10 if not set)"),
         ("skip" = Option<u32>, Query, minimum = 0, description = "offset list start")
     ),
     responses(
@@ -57,11 +57,12 @@ fn index() -> Result<Json<Health>, AppError> {
 #[get("/sounds?<limit>&<skip>")]
 async fn sounds(db: Db, limit: Option<u32>, skip: Option<u32>) -> Result<Json<Vec<Sound>>, AppError> {
     let _limit = get_limit(limit, 10, 1, 1000);
-    let sound_list = load_sounds(db, _limit, skip.unwrap_or(0).into()).await;
+    let sound_list = load_sounds(
+        db, _limit, skip.unwrap_or(0).into()).await;
 
     match sound_list {
         Ok(sounds) => Ok(Json(sounds)),
-        Err(err) => Err(AppError::DBError("could not load sounds".to_string()))
+        Err(_err) => Err(AppError::DBError("could not load sounds".to_string()))
     }
 }
 
@@ -69,7 +70,8 @@ async fn sounds(db: Db, limit: Option<u32>, skip: Option<u32>) -> Result<Json<Ve
     get,
     path="/api/v1/categories",
     params(
-        ("limit" = Option<u32>, Query, minimum = 1, maximum = 1000, description = "limit list length (default 10 if not set)"),
+        ("limit" = Option<u32>, Query, minimum = 1, maximum = 1000,
+        description = "limit list length (default 10 if not set)"),
         ("skip" = Option<u32>, Query, minimum = 0, description = "offset list start")
     ),
     responses(
@@ -79,11 +81,12 @@ async fn sounds(db: Db, limit: Option<u32>, skip: Option<u32>) -> Result<Json<Ve
 #[get("/categories?<limit>&<skip>")]
 async fn categories(db: Db, limit: Option<u32>, skip: Option<u32>) -> Result<Json<Vec<Category>>, AppError> {
     let _limit = get_limit(limit, 10, 1, 1000);
-    let category_list = load_categories(db, _limit, skip.unwrap_or(0).into()).await;
+    let category_list = load_categories(
+        db, _limit, skip.unwrap_or(0).into()).await;
 
     match category_list {
         Ok(categories) => Ok(Json(categories)),
-        Err(err) => Err(AppError::DBError("could not load categories".to_string()))
+        Err(_err) => Err(AppError::DBError("could not load categories".to_string()))
     }
 }
 
@@ -91,7 +94,8 @@ async fn categories(db: Db, limit: Option<u32>, skip: Option<u32>) -> Result<Jso
     get,
     path="/api/v1/subcategories",
     params(
-        ("limit" = Option<u32>, Query, minimum = 1, maximum = 1000, description = "limit list length (default 10 if not set)"),
+        ("limit" = Option<u32>, Query, minimum = 1, maximum = 1000,
+        description = "limit list length (default 10 if not set)"),
         ("skip" = Option<u32>, Query, minimum = 0, description = "offset list start")
     ),
     responses(
@@ -101,11 +105,12 @@ async fn categories(db: Db, limit: Option<u32>, skip: Option<u32>) -> Result<Jso
 #[get("/subcategories?<limit>&<skip>")]
 async fn subcategories(db: Db, limit: Option<u32>, skip: Option<u32>) -> Result<Json<Vec<SubCategory>>, AppError> {
     let _limit = get_limit(limit, 10, 1, 1000);
-    let subcategory_list = load_subcategories(db, _limit, skip.unwrap_or(0).into()).await;
+    let subcategory_list = load_subcategories(
+        db, _limit, skip.unwrap_or(0).into()).await;
 
     match subcategory_list {
         Ok(subcategories) => Ok(Json(subcategories)),
-        Err(err) => Err(AppError::DBError("could not load categories".to_string()))
+        Err(_err) => Err(AppError::DBError("could not load categories".to_string()))
     }
 }
 
@@ -123,7 +128,7 @@ async fn subcategories(db: Db, limit: Option<u32>, skip: Option<u32>) -> Result<
 )]
 #[post("/play/<id>")]
 async fn play(id: u32) -> Result<Json<u32>, AppError> {
-// TODO: add mqtt client to rocket managed state
+
     let mut mqttoptions = MqttOptions::new(
         "soundshouter-api", "127.0.0.1", 1883);
     mqttoptions.set_keep_alive(Duration::from_secs(10));
@@ -132,7 +137,7 @@ async fn play(id: u32) -> Result<Json<u32>, AppError> {
     client.subscribe("soudnshouter/queue", QoS::AtMostOnce).await.unwrap();
 
 
-    let thr = task::spawn(async move {
+    let _thr = task::spawn(async move {
 
         debug!("[API] sending to queue: {}", &id);
         let _res = client.publish(
@@ -144,7 +149,6 @@ async fn play(id: u32) -> Result<Json<u32>, AppError> {
         ).await.unwrap();
 
         time::sleep(Duration::from_millis(100)).await;
-
         debug!("{:?}", &_res);
     });
 

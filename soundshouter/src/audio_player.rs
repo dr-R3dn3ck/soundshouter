@@ -7,8 +7,7 @@ use std::fs::File;
 use std::io::BufReader;
 use std::time::Duration;
 use std::{thread};
-use log::{debug, error, info};
-use directories::ProjectDirs;
+use log::{debug, error};
 use crate::db::models::{PSound};
 use std::collections::HashMap;
 
@@ -40,7 +39,7 @@ impl ThreadMonitor {
 
     pub fn join_threads(&mut self) {
         for id in &self.fin {
-            let mut thread = self.threads.as_mut().remove(&id).unwrap();
+            let thread = self.threads.as_mut().remove(&id).unwrap();
             let res = thread.join();
             debug!("Thread {} joined", id);
             if let Err(e) = res {
@@ -51,13 +50,7 @@ impl ThreadMonitor {
     }
 }
 
-pub fn play_test_audio() {
-    let file = File::open("data/test.mp3").unwrap();
-    play_audio(file);
-}
-
 fn increment_play_count(sound_id: u32, con: &mut PooledConnection<ConnectionManager<SqliteConnection>>) {
-    use crate::db::schema::sound;
     use crate::db::schema::sound::dsl::*;
 
     let res = diesel::update(sound)
@@ -147,7 +140,14 @@ pub fn poll_queue(db_url: String) {
     let mut monitor = ThreadMonitor::new();
 
     // Iterate to poll the event loop for connection progress
-    for (i, notification) in connection.iter().enumerate() {
+    let mut con_iter = connection.iter();
+    let mut i = 0;
+    loop {
+        i = if i < usize::MAX { i + 1 } else { 1 };
+
+        let notification = con_iter.next()
+            .expect("audio player connection error");
+
         debug!("Notification = {:?}", &notification);
         match notification {
             Ok(Event::Incoming(Incoming::Publish(p))) => {
@@ -157,7 +157,7 @@ pub fn poll_queue(db_url: String) {
                 if let Ok(id) = payload_str.parse::<u32>() {
                     match pool.get() {
                         Ok(mut con) => {
-                            let handle = thread::spawn(move || {play(id, &mut con)});
+                            let handle = thread::spawn(move || { play(id, &mut con) });
                             monitor.add_thread(i, handle);
                         },
                         Err(_e) => {}
@@ -165,8 +165,8 @@ pub fn poll_queue(db_url: String) {
                 };
             }
             Ok(_) => {}
-            Err(e) => {
-                error!("Error: {:?}", &e);
+            Err(_e) => {
+                // error!("Error: {:?}", &e);
             }
         }
 

@@ -1,8 +1,6 @@
-use std::path::PathBuf;
 use std::thread;
 use std::thread::JoinHandle;
-use clap::builder::Str;
-use crate::audio_player::{play_test_audio, poll_queue};
+use crate::audio_player::{poll_queue};
 use crate::broker::run_broker;
 use crate::api::run_api;
 
@@ -15,7 +13,7 @@ pub struct AppState {
 impl AppState {
     fn start(&mut self, db_uri: String, broker_conf: String) -> &mut AppState {
         if self.api_thread.is_none() {
-            self.api_thread = Some(thread::spawn(|| { run_api();}));
+            self.api_thread = Some(thread::spawn(|| { let _ = run_api();}));
         }
         if self.broker_thread.is_none() {
             self.broker_thread = Some(thread::spawn(|| { run_broker(broker_conf); }));
@@ -24,10 +22,6 @@ impl AppState {
             self.player_thread = Some(thread::spawn(||{ poll_queue(db_uri);}));
         }
         self
-    }
-
-    fn new_sound_thread(&mut self) {
-        self.player_thread = Some(thread::spawn(||{ play_test_audio();}));
     }
 
     fn wait(&mut self) {

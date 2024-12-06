@@ -8,10 +8,10 @@ use directories::ProjectDirs;
 #[derive(Debug)]
 /// Soundshouter base dir configuration
 pub struct DirConfig {
-    pub(crate) rocket_conf: PathBuf,
+    // pub(crate) rocket_conf: PathBuf,
     pub(crate) queue_conf: PathBuf,
-    pub(crate) config_dir: PathBuf,
-    pub(crate) data_dir: PathBuf,
+    // pub(crate) config_dir: PathBuf,
+    // pub(crate) data_dir: PathBuf,
     pub(crate) log_conf: PathBuf,
 }
 
@@ -74,15 +74,15 @@ pub fn init_app() -> Result<(DirConfig, Config), io::Error> {
 
     let log_conf = proj_dirs.config_dir().join("log4rs.yml");
     if !log_conf.exists() {
-        create_log_config(&log_conf);
+        create_log_config(&log_conf)?;
     };
     std::env::set_var("ROCKET_CONFIG", &rocket_conf);
 
     Ok((DirConfig {
-        rocket_conf,
+        // rocket_conf,
         queue_conf,
-        config_dir,
-        data_dir: data_path,
+        // config_dir,
+        // data_dir: data_path,
         log_conf
     }, config))
 }

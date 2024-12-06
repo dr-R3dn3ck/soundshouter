@@ -8,16 +8,13 @@ mod connection_pool;
 mod error;
 mod config;
 mod import;
-mod lib;
 mod cli;
 
-use std::io::IsTerminal;
 use std::path::PathBuf;
 use clap::{arg, Parser, Subcommand};
 use crate::db::load_all_sounds;
 use crate::Commands::Import;
-use crate::config::{init_app, DirConfig};
-// use crate::db::run_migration;
+use crate::config::{init_app};
 use crate::import::import_sounds;
 use crate::cli::run;
 

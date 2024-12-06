@@ -3,12 +3,12 @@ use std::io;
 use std::fs::{self, DirEntry, File};
 use std::io::BufReader;
 use std::path::Path;
-use log::{error, info, debug};
+use log::{error, debug};
 use rodio::Source;
 use crate::db::{establish_connection, get_or_create_category, get_or_create_sound, get_or_create_subcategory};
 use crate::db::models;
 
-pub fn import_sounds(src: &PathBuf, dest: &PathBuf, db_uri: &String) {
+pub fn import_sounds(src: &PathBuf, _dest: &PathBuf, db_uri: &String) {
 
     let res = visit_dirs(src, &|entry| {
         // use decoder to confirm file format
