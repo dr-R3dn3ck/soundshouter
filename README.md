@@ -2,7 +2,7 @@
 
 Wer kennt das nicht - Du sitzt mit deinen Dudes bei einer gepflegten Partie Mensch-Ärgere-Dich, Du rasierst gerade zwei gegnerische Spielfiguren übern Rasen, und denkst Dir "ULTRAKILL". Wenn jetzt der zugehörige Sound in klassischer Quake 3 Manier aus den Lautsprechern käme, um deinen Sieg zu zementieren - ein Traum würde in Erfüllung gehen! Gut, dass wir hier den soundshouter mit genau dieser Funktionalität entwickeln. 
 
-# Features
+# Features 
 
 ## Playback von beliebigen lokalen Sounddateien 
 
@@ -21,27 +21,17 @@ Das Programm soll folgende Eingabemethoden unterstützen:
 
 # Installation
 Installationsvorraussetzungen:
-1. Python 3.12
-2. poetry
-3. rabbitmq
+1. rustup / rust
+2. cargo build
 
-*Pakete installieren*
+*Sounds importieren*
 ```bash
-poetry install
+soundshouter import <sounds ordner>
 ```
 
 *Server starten (Entwicklungsumgebung)*
 ```bash
-# Beispiel: Rabbitmq via docker starten
-docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-management
-
-# Sounddateien erfassen
-poetry run soundshouter initdb ~/sounds
-
-# Server ausführen
-#  - API: http://127.0.0.1:5000
-#  - API docs: http://127.0.0.1:5000/docs
-poetry run soundshouter server
+soundshouter serve
 ```
 
 
