@@ -11,9 +11,10 @@ mod import;
 mod cli;
 
 use std::path::PathBuf;
+use std::str::FromStr;
 use clap::{arg, Parser, Subcommand};
 use log::info;
-use crate::db::load_all_sounds;
+use crate::db::load_all_psounds;
 use crate::Commands::Import;
 use crate::config::{init_app};
 use crate::import::import_sounds;
@@ -43,11 +44,40 @@ enum Commands {
         path: PathBuf
     },
     /// list all available sounds
-    List,
+    List {
+        #[arg(help = format!("output format [{}, {}]", Format::Jsonl.to_string(), Format::Paths.to_string()))]
+        format: Format
+    },
     /// run gui
     #[cfg(feature = "gui")]
     Gui,
     Serve,
+}
+
+#[derive(Debug, Clone)]
+enum Format {
+    Jsonl,
+    Paths
+}
+
+impl FromStr for Format {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "jsonl" => Ok(Format::Jsonl),
+            "paths" => Ok(Format::Paths),
+            _ => Err(format!("invalid format: {}", s))
+        }
+    }
+}
+
+impl ToString for Format {
+    fn to_string(&self) -> String {
+        match self {
+            Format::Jsonl => "jsonl".to_string(),
+            Format::Paths => "paths".to_string(),
+        }
+    }
 }
 
 fn main() {
@@ -66,15 +96,25 @@ fn main() {
                 import_sounds(&path, &conf.general.sound_file_path, &conf.general.db_uri);
 
             },
-            Commands::List => {
-                match load_all_sounds(&conf.general.db_uri) {
+            Commands::List { format} => {
+                match load_all_psounds(&conf.general.db_uri) {
                     Ok(soundlist) => {
                         soundlist.iter()
                             .for_each(|s| {
-                                if let Ok(snd) = serde_json::to_string(s) {
-                                    println!("{}", snd);
+                                match format {
+                                    Format::Jsonl => {
+                                        if let Ok(snd) = serde_json::to_string(s) {
+                                            println!("{}", snd);
+                                        }
+                                    }
+                                    Format::Paths => {
+                                        let pth = conf.general.sound_file_path.join(&s.path);
+                                        if let Some(str) = pth.to_str(){
+                                            println!("{}", str);
+                                        }
+                                    }
                                 }
-                            });
+                            })
                     }
                     Err(e) => {
                         println!("No sounds available ({:?})", e);

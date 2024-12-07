@@ -29,10 +29,10 @@ pub fn establish_connection(uri: Option<&String>) -> SqliteConnection {
 use crate::db::models::*;
 use crate::db::schema::sound::dsl::sound;
 
-pub fn load_all_sounds(db_uri: &String) -> Result<Vec<Sound>, diesel::result::Error> {
+pub fn load_all_psounds(db_uri: &String) -> Result<Vec<PSound>, diesel::result::Error> {
     let connection = &mut establish_connection(Some(db_uri));
 
-    sound.select(Sound::as_select())
+    sound.select(PSound::as_select())
         .load(connection)
 }
 
