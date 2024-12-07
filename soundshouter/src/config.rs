@@ -1,6 +1,7 @@
 use std::{fs, io};
 use std::fs::File;
 use std::io::{Read, Write};
+use std::net::IpAddr;
 use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 use directories::ProjectDirs;
@@ -10,8 +11,8 @@ use directories::ProjectDirs;
 pub struct DirConfig {
     // pub(crate) rocket_conf: PathBuf,
     pub(crate) queue_conf: PathBuf,
-    // pub(crate) config_dir: PathBuf,
-    // pub(crate) data_dir: PathBuf,
+    pub(crate) config_dir: PathBuf,
+    pub(crate) data_dir: PathBuf,
     pub(crate) log_conf: PathBuf,
 }
 
@@ -19,7 +20,8 @@ pub struct DirConfig {
 /// Soundshouter configuration
 pub struct Config {
     pub(crate) general: General,
-    api: Option<Api>,
+    pub(crate) api: Option<Api>,
+    pub(crate) queue: Queue
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -31,6 +33,14 @@ pub struct General {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Api {
     active: bool,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Queue {
+    pub(crate) active: bool,
+    pub(crate) ip: IpAddr,
+    pub(crate) port: u16,
+    pub(crate) topic: String,
 }
 
 #[cfg(not(target_os = "macos"))]
@@ -81,8 +91,8 @@ pub fn init_app() -> Result<(DirConfig, Config), io::Error> {
     Ok((DirConfig {
         // rocket_conf,
         queue_conf,
-        // config_dir,
-        // data_dir: data_path,
+        config_dir,
+        data_dir: data_path,
         log_conf
     }, config))
 }
@@ -114,7 +124,13 @@ fn create_default_config(pth: &PathBuf, data_pth: &PathBuf) -> Result<Config, io
             sound_file_path: data_pth.join("sounds"),
             db_uri: data_pth.join("soundshouter.sqlite3").to_str().unwrap().to_string(),
         },
-        api: Some(Api { active: true }),
+        api: None, // Some(Api { active: true }),
+        queue: Queue {
+            active: true,
+            ip: IpAddr::V4(std::net::Ipv4Addr::new(127, 0, 0, 1)),
+            port: 1883,
+            topic: "soudnshouter/queue".to_string(),
+        }
     };
 
     let mut file = File::create(pth)?;

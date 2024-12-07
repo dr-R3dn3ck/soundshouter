@@ -127,21 +127,20 @@ async fn subcategories(db: Db, limit: Option<u32>, skip: Option<u32>) -> Result<
     )
 )]
 #[post("/play/<id>")]
-async fn play(id: u32) -> Result<Json<u32>, AppError> {
+async fn play(id: u32, config: &rocket::State<Config>) -> Result<Json<u32>, AppError> {
 
     let mut mqttoptions = MqttOptions::new(
-        "soundshouter-api", "127.0.0.1", 1883);
+        "soundshouter-api", &config.queue.ip.to_string(), config.queue.port);
     mqttoptions.set_keep_alive(Duration::from_secs(10));
 
     let (client, mut eventloop) = AsyncClient::new(mqttoptions, 10);
-    client.subscribe("soudnshouter/queue", QoS::AtMostOnce).await.unwrap();
+    client.subscribe(&config.queue.topic, QoS::AtMostOnce).await.unwrap();
 
-
+    let topic = config.queue.topic.clone();
     let _thr = task::spawn(async move {
-
         debug!("[API] sending to queue: {}", &id);
         let _res = client.publish(
-            "soundshouter/queue",
+            topic,
             QoS::AtLeastOnce,
             false,
             // vec![1, id]
@@ -169,6 +168,7 @@ async fn play(id: u32) -> Result<Json<u32>, AppError> {
 }
 
 use rocket::Shutdown;
+use crate::config::{init_app, Config};
 
 #[get("/shutdown")]
 fn shutdown(shutdown: Shutdown) -> &'static str {
@@ -186,8 +186,12 @@ pub async fn run_api() -> Result<(), rocket::Error> {
     )]
     struct ApiDoc;
 
+    // load config again (because rocket::main cannot have parameters)
+    let (_dirs, conf) = init_app().expect("failed to init app");
+
     rocket::build()
         .attach(Db::fairing())
+        .manage(conf)
         .mount(
             "/api/v1",
             routes![

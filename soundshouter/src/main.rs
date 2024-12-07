@@ -12,6 +12,7 @@ mod cli;
 
 use std::path::PathBuf;
 use clap::{arg, Parser, Subcommand};
+use log::info;
 use crate::db::load_all_sounds;
 use crate::Commands::Import;
 use crate::config::{init_app};
@@ -89,10 +90,14 @@ fn main() {
                 let _result = gui::main_window(&conf.general.db_uri);
             }
             Commands::Serve => {
-                let _result = run(conf.general.db_uri,
+                let _result = run(conf.general.db_uri.clone(),
                                   dirs.queue_conf.to_str()
                                       .expect("could not create string")
-                                      .to_string());
+                                      .to_string(),
+                                    &conf);
+
+                info!("config: {:?}", dirs.config_dir);
+                info!("data:   {:?}", dirs.data_dir)
             }
         }
         return;
