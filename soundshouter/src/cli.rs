@@ -26,10 +26,12 @@ impl AppState {
             let topic = config.queue.topic.to_string();
             let ip = config.queue.ip.to_string();
             let port = config.queue.port;
+            let sndpth = config.general.sound_file_path.clone();
 
             self.player_thread = Some(thread::spawn(move || {
                 AudioPlayer {
                     db_url: db_uri,
+                    sound_dir: sndpth,
                     queue_topic: topic,
                     queue_ip: ip,
                     queue_port: port,

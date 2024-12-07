@@ -52,12 +52,9 @@ enum Commands {
 
 fn main() {
     let args = Args::parse();
-    println!("{args:?}");
 
     let (dirs, conf) = init_app().expect("failed to init app");
     log4rs::init_file(&dirs.log_conf, Default::default()).unwrap();
-    println!("{:?}", conf);
-    println!("{:?}", dirs);
 
     // create database if it doesn't exist,
     db::run_migration(&mut db::establish_connection(Some(&conf.general.db_uri)));
@@ -74,10 +71,9 @@ fn main() {
                     Ok(soundlist) => {
                         soundlist.iter()
                             .for_each(|s| {
-                                println!("{}",
-                                         serde_json::to_string(s)
-                                             .expect("failed to serialize sound")
-                                );
+                                if let Ok(snd) = serde_json::to_string(s) {
+                                    println!("{}", snd);
+                                }
                             });
                     }
                     Err(e) => {

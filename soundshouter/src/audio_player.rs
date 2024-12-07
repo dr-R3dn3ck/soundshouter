@@ -7,10 +7,12 @@ use std::fs::File;
 use std::io::BufReader;
 use std::time::Duration;
 use std::{thread};
+use std::path::PathBuf;
 use log::{debug, error};
 use crate::db::models::{PSound};
 pub struct AudioPlayer {
     pub(crate) db_url: String,
+    pub(crate) sound_dir: PathBuf,
     pub(crate) queue_client_id: String,
     pub(crate) queue_ip: String,
     pub(crate) queue_port: u16,
@@ -24,6 +26,7 @@ impl Default for AudioPlayer {
     fn default() -> Self {
         AudioPlayer {
             db_url: "".to_string(),
+            sound_dir: PathBuf::new(),
             queue_client_id: "0".to_string(),
             queue_ip: "127.0.0.1".to_string(),
             queue_port: 1883,
@@ -67,7 +70,7 @@ impl AudioPlayer {
         debug!("{:?}", &snd_lst);
         match snd_lst.first() {
             Some(_sound) => {
-                if let Ok(file) = File::open(&_sound.path) {
+                if let Ok(file) = File::open(self.sound_dir.join(&_sound.path)) {
                     Some(file)
                 } else {
                     error!("couldn't open file of sound {}", sound_id);

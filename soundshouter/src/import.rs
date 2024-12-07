@@ -1,15 +1,14 @@
 use std::path::{PathBuf, Component};
 use std::io;
 use std::fs::{self, DirEntry, File};
-use std::io::BufReader;
+use std::io::{BufReader};
 use std::path::Path;
-use log::{error, debug};
+use log::{error, info, debug};
 use rodio::Source;
 use crate::db::{establish_connection, get_or_create_category, get_or_create_sound, get_or_create_subcategory};
 use crate::db::models;
 
-pub fn import_sounds(src: &PathBuf, _dest: &PathBuf, db_uri: &String) {
-
+pub fn import_sounds(src: &PathBuf, dest: &PathBuf, db_uri: &String) {
     let res = visit_dirs(src, &|entry| {
         // use decoder to confirm file format
         let file = File::open(entry.path()).unwrap();
@@ -49,14 +48,30 @@ pub fn import_sounds(src: &PathBuf, _dest: &PathBuf, db_uri: &String) {
                     }
                     else { 0.0 };
                     debug!("duration of {:?}: {:?}", duration, entry.path());
-                    // TODO: copy sound and store destination path in database
-                    let res = get_or_create_sound(&mut db,
-                                                  sound_name, soundfile.to_str().unwrap(),
-                                                  duration, catid, subcatid);
-                    if let Ok(sound) = res { Some(sound) }
-                    else { None }
+
+                    let entrypth = entry.path();
+                    match copy_file(src, dest, &entrypth) {
+                        Ok((reldest, absdest)) => {
+                            debug!("destination: {}", dest.to_str().unwrap());
+                            let res = get_or_create_sound(&mut db,
+                                                          sound_name, reldest.to_str().unwrap(),
+                                                          duration, catid, subcatid);
+
+                            if let Ok(sound) = res {
+                                Some(sound)
+                            }
+                            else {
+                                fs::remove_file(absdest).unwrap_or_else(
+                                    |e| error!("error removing file: {}", e));
+                                None
+                            }
+                        }
+                        Err(e) => {
+                            error!("error copying file: {}", e);
+                            None
+                        }
+                    }
                 };
-                // TODO: better error reporting and logging
             },
             Err(e) => { error!("error decoding file: {}", e); }
         }
@@ -64,9 +79,27 @@ pub fn import_sounds(src: &PathBuf, _dest: &PathBuf, db_uri: &String) {
     });
 
     match res {
-        // TODO: logging
-        Ok(_) => { println!("successfully imported sounds"); },
-        Err(e) => { println!("error importing sounds: {}", e); }
+        Ok(_) => { info!("successfully imported sounds"); },
+        Err(e) => { error!("error importing sounds: {}", e); }
+    }
+}
+
+/// try to copy file to destination (data dir)
+/// return path relative to destination for database entry
+fn copy_file(src: &Path, dest: &Path, entry: &PathBuf) -> Result<(PathBuf, PathBuf), String> {
+
+    let dest2 = entry.strip_prefix(src)
+                        .map_err(|e| {e.to_string()})?;
+    let dest = dest.join(dest2);
+
+    if let Some(parent) = dest.parent() {
+        if dest.exists() {
+            fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+            fs::copy(&entry, &dest).map_err(|e| e.to_string())?;
+        }
+        Ok((dest2.to_path_buf(), dest))
+    } else {
+        Err("could not create parent directory".to_string())
     }
 }
 
