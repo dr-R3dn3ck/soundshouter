@@ -9,46 +9,7 @@ use std::time::Duration;
 use std::{thread};
 use log::{debug, error};
 use crate::db::models::{PSound};
-use std::collections::HashMap;
-
-struct ThreadMonitor {
-    threads: Box<HashMap<usize, thread::JoinHandle<()>>>,
-    fin: Vec<usize>
-}
-
-impl ThreadMonitor {
-    pub fn new() -> Self {
-        ThreadMonitor {
-            threads: Box::new(HashMap::new()),
-            fin: Vec::new()
-        }
-    }
-
-    pub fn add_thread(&mut self, id: usize, thread: thread::JoinHandle<()>) {
-        self.threads.insert(id, thread);
-    }
-
-    pub fn search_finished_threads(&mut self) -> &mut Self {
-        for (id, thread) in self.threads.iter() {
-            if thread.is_finished() {
-                self.fin.push(id.clone());
-            }
-        }
-        self
-    }
-
-    pub fn join_threads(&mut self) {
-        for id in &self.fin {
-            let thread = self.threads.as_mut().remove(&id).unwrap();
-            let res = thread.join();
-            debug!("Thread {} joined", id);
-            if let Err(e) = res {
-                error!("Error in thread: {:?}", e);
-            }
-        }
-        self.fin.clear();
-    }
-}
+use rodio::OutputStreamHandle;
 
 fn increment_play_count(sound_id: u32, con: &mut PooledConnection<ConnectionManager<SqliteConnection>>) {
     use crate::db::schema::sound::dsl::*;
@@ -99,20 +60,19 @@ pub fn load_audio(sound_id: u32, con: &mut PooledConnection<ConnectionManager<Sq
     }
 }
 
-pub fn play_audio(file: File) {
-    let (_stream, handle) = rodio::OutputStream::try_default().unwrap();
-    let sink = rodio::Sink::try_new(&handle).unwrap();
+pub fn play_audio(file: File, stream_handle: &OutputStreamHandle) {
+    let sink = rodio::Sink::try_new(&stream_handle).unwrap();
     sink.append(rodio::Decoder::new(BufReader::new(file)).unwrap());
-    sink.sleep_until_end();
+    sink.detach();
 }
 
-pub fn play(id: u32, con: &mut PooledConnection<ConnectionManager<SqliteConnection>>) {
+pub fn play(id: u32, con: &mut PooledConnection<ConnectionManager<SqliteConnection>>, stream_handle: &OutputStreamHandle) {
     let pth = load_audio(id, con);
     // increment play count
     // submit_to_play_queue(id);
     match pth {
         Some(file) => {
-            play_audio(file);
+            play_audio(file, stream_handle);
             increment_play_count(id, con);
         },
         None => {}
@@ -137,7 +97,7 @@ pub fn poll_queue(db_url: String) {
         .build(manager)
         .expect("Failed to create the pool.");
 
-    let mut monitor = ThreadMonitor::new();
+    let (_stream, stream_handle) = rodio::OutputStream::try_default().unwrap();
 
     // Iterate to poll the event loop for connection progress
     let mut con_iter = connection.iter();
@@ -157,8 +117,7 @@ pub fn poll_queue(db_url: String) {
                 if let Ok(id) = payload_str.parse::<u32>() {
                     match pool.get() {
                         Ok(mut con) => {
-                            let handle = thread::spawn(move || { play(id, &mut con) });
-                            monitor.add_thread(i, handle);
+                            play(id, &mut con, &stream_handle);
                         },
                         Err(_e) => {}
                     };
@@ -169,8 +128,5 @@ pub fn poll_queue(db_url: String) {
                 // error!("Error: {:?}", &e);
             }
         }
-
-        monitor.search_finished_threads()
-            .join_threads();
     }
 }
