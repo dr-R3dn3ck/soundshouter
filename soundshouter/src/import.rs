@@ -18,6 +18,8 @@ pub fn import_sounds(src: &PathBuf, dest: &PathBuf, db_uri: &String) {
         // create database entry
         match res {
             Ok(decoder) => {
+                debug!("importing {:?}", &entry.path());
+
                 let soundfile = entry.path();
                 let components: Vec<Component> = soundfile.strip_prefix(&src).unwrap().components().collect();
                 let sound_name = soundfile.file_stem().unwrap().to_str().unwrap();
@@ -52,7 +54,7 @@ pub fn import_sounds(src: &PathBuf, dest: &PathBuf, db_uri: &String) {
                     let entrypth = entry.path();
                     match copy_file(src, dest, &entrypth) {
                         Ok((reldest, absdest)) => {
-                            debug!("destination: {}", dest.to_str().unwrap());
+                            debug!("destination: {}", absdest.to_str().unwrap());
                             let res = get_or_create_sound(&mut db,
                                                           sound_name, reldest.to_str().unwrap(),
                                                           duration, catid, subcatid);
@@ -93,7 +95,7 @@ fn copy_file(src: &Path, dest: &Path, entry: &PathBuf) -> Result<(PathBuf, PathB
     let dest = dest.join(dest2);
 
     if let Some(parent) = dest.parent() {
-        if dest.exists() {
+        if !dest.exists() {
             fs::create_dir_all(parent).map_err(|e| e.to_string())?;
             fs::copy(&entry, &dest).map_err(|e| e.to_string())?;
         }

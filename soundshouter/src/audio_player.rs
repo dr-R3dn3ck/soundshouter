@@ -70,10 +70,11 @@ impl AudioPlayer {
         debug!("{:?}", &snd_lst);
         match snd_lst.first() {
             Some(_sound) => {
-                if let Ok(file) = File::open(self.sound_dir.join(&_sound.path)) {
+                let pth = self.sound_dir.join(&_sound.path);
+                if let Ok(file) = File::open(&pth) {
                     Some(file)
                 } else {
-                    error!("couldn't open file of sound {}", sound_id);
+                    error!("couldn't open file of sound {} {:?}", sound_id, pth);
                     None
                 }
             },

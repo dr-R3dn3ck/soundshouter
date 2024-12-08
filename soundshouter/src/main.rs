@@ -10,12 +10,12 @@ mod config;
 mod import;
 mod cli;
 
+use std::io::Write;
 use std::path::PathBuf;
 use std::str::FromStr;
 use clap::{arg, Parser, Subcommand};
 use log::info;
 use crate::db::load_all_psounds;
-use crate::Commands::Import;
 use crate::config::{init_app};
 use crate::import::import_sounds;
 use crate::cli::run;
@@ -35,6 +35,9 @@ struct Args {
     cmd: Option<Commands>,
 }
 
+// #[option(short = 'i',  help = "delete without confirmation", default_value = "false")]
+
+
 #[derive(Subcommand, Debug)]
 #[clap(name = "import")]
 enum Commands {
@@ -47,6 +50,12 @@ enum Commands {
     List {
         #[arg(help = format!("output format [{}, {}]", Format::Jsonl.to_string(), Format::Paths.to_string()))]
         format: Format
+    },
+    Reset {
+        #[arg(short = 'y', help = "delete without confirmation", default_value = "false")]
+        yes: bool,
+        #[arg(long = "include-config", help = "delete config files", default_value = "false")]
+        include_config: bool,
     },
     /// run gui
     #[cfg(feature = "gui")]
@@ -91,7 +100,32 @@ fn main() {
 
     if let Some(cmd) = args.cmd {
         match cmd {
-            Import { path } => {
+            Commands::Reset { yes, include_config } => {
+                let input  = if yes {
+                    "Y".to_string()
+                } else {
+                    let st = if include_config { "and configuration " } else { "" };
+                    print!("Should all files {}be deleted? [Y]: ", st);
+
+                    std::io::stdout().flush().unwrap();
+                    let mut input = String::new();
+                    std::io::stdin()
+                        .read_line(&mut input)
+                        .expect("Failed to read input");
+                    input
+                };
+
+                match input.trim() {
+                    "Y" => {
+                        std::fs::remove_dir_all(&dirs.data_dir).expect("failed to reset data dir");
+                        std::fs::remove_dir_all(&dirs.config_dir).expect("failed to reset config dir");
+                    }
+                    _ => {
+                        println!("aborted");
+                    }
+                }
+            },
+            Commands::Import { path } => {
                 // read path, create database if it doesn't exist
                 import_sounds(&path, &conf.general.sound_file_path, &conf.general.db_uri);
 
