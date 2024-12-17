@@ -6,7 +6,7 @@
     <NavBar />
   </header>
 
-  <body class="min-h-screen max-h-screen dark:bg-gray-800">
+  <body class="dark:bg-gray-800">
     <SideBar>
         <template #element>
             <SideBarElement v-for="category in categories"
@@ -15,24 +15,32 @@
         </template>
         <template #main>
             <SoundTable>
-            <SoundElement v-for="sound in sounds" 
-            :id="sound.id" 
-            :name="sound.name"
-            :duration="sound.duration" 
-            :play_count="sound.play_count"
-            :category_id="sound.category_id" 
-            :caterory="sound.category"
-            :subcategory_id="sound.subcategory_id" >
-                
-            </SoundElement>
+                <template #subcat>
+                    <SubCatElement v-for="sub in subcategories"
+                    :subcat="sub.name">
+
+                    </SubCatElement>
+                </template>
+                <SoundElement v-for="sound in sounds" 
+                :id="sound.id" 
+                :name="sound.name"
+                :duration="sound.duration" 
+                :play_count="sound.play_count"
+                :category_id="sound.category_id" 
+                :caterory="sound.category"
+                :subcategory_id="sound.subcategory_id" >
+                    
+                </SoundElement>
             </SoundTable>
         </template>
+
     </SideBar>
   </body>
 
-  <footer class="bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20">
-    <Footer />
-  </footer>
+    <footer class="p-4 sm:ml-64 bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20">
+        <Footer />
+    </footer>
+  
 
 </template>
 
@@ -44,6 +52,7 @@ import Footer from "./components/Footer.vue"
 import SoundElement from "./components/SoundElement.vue"
 import SideBar from "./components/SideBar.vue"
 import SideBarElement from "./components/SideBarElement.vue"
+import SubCatElement from "./components/SubCatElement.vue"
 
 import { reactive } from 'vue'
 import { onMounted } from 'vue'
@@ -180,6 +189,51 @@ const subcategories = reactive([
     },
     {
         "id": 3,
+        "name": "subcatergory3",
+        "category_id": 3
+    },
+    {
+        "id": 4,
+        "name": "subcatergory3",
+        "category_id": 3
+    },
+    {
+        "id": 5,
+        "name": "subcatergory3",
+        "category_id": 3
+    },
+    {
+        "id": 6,
+        "name": "subcatergory3",
+        "category_id": 3
+    },
+    {
+        "id": 7,
+        "name": "subcatergory3",
+        "category_id": 3
+    },
+    {
+        "id": 8,
+        "name": "subcatergory3",
+        "category_id": 3
+    },
+    {
+        "id": 9,
+        "name": "subcatergory3",
+        "category_id": 3
+    },
+    {
+        "id": 10,
+        "name": "subcatergory3",
+        "category_id": 3
+    },
+    {
+        "id": 11,
+        "name": "subcatergory3",
+        "category_id": 3
+    },
+    {
+        "id": 12,
         "name": "subcatergory3",
         "category_id": 3
     }
