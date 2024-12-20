@@ -11,7 +11,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-4 sm:ml-64">
+    <div class="relative min-h-screen overflow-x-auto shadow-md sm:rounded-lg p-4 sm:ml-64">
         <div class="pb-5 bg-white dark:bg-gray-900 h-auto sticky top-0">
             <slot name="subcat"></slot>
         </div>
