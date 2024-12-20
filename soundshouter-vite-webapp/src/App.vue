@@ -31,7 +31,7 @@
             <template #soundelements>
                 <SoundElement v-for="sound in soundsFiltered" :id="sound.id" :name="sound.name" :duration="sound.duration"
                     :play_count="sound.play_count" :category_id="sound.category_id" :caterory="sound.category"
-                    :subcategory_id="sound.subcategory_id">
+                    :subcategory_id="sound.subcategory_id" @emit-shout-event="shoutNow">
 
                 </SoundElement>
             </template>
@@ -54,7 +54,7 @@ import NavBar from "./components/NavBar.vue"
 import Footer from "./components/Footer.vue"
 import SideBar from "./components/SideBar.vue"
 import SideBarElement from "./components/SideBarElement.vue"
-import { categories, filterSounds, soundsFiltered, subcategoriesFiltered, filterSubCategories , filterSoundsBySubCatergorie} from "./js/data.js"
+import { categories, filterSounds, soundsFiltered, subcategoriesFiltered, filterSubCategories , filterSoundsBySubCatergorie, shoutNow} from "./js/data.js"
 import SubCatElement from "./components/SubCatElement.vue"
 import SoundElement from './components/SoundElement.vue';
 

@@ -201,3 +201,7 @@ export function filterSoundsBySubCatergorie(id, e){
         }
     }
 }
+
+export function shoutNow(id, e){
+    console.log(id)
+}
