@@ -1,62 +1,5 @@
 import { ref, reactive } from "vue"
 
-// NOT USED FROM
-const categoriesobj = reactive({
-    id:Number,
-    name:String
-})
-
-const soundobj = reactive({
-    id:Number,
-    name:String,
-    duration:Number,
-    playcounter:Number,
-    categoryid:Number,
-    subcategoryid:categoriesobj
-})
-
-const subcategoriesobj = reactive({
-    id:Number,
-    name:String,
-    categoryid:categoriesobj
-})
-
-export const dataobj = reactive({
-    sounds:[soundobj],
-    categories:[categoriesobj],
-    subcategories:[subcategoriesobj]
-})
-
-export const parseSounds = (sounds) =>{
-    for (var i=0;i<sounds.length; i++){
-        console.log(sounds[i].id)
-        soundobj = (id=sounds[i].id)
-        //soundobj = (id=ele.id)
-        //dataobj.sounds.push('baz')
-        //dataobj.sounds.values.push()
-    }
-}
-// NOT USED TILL
-
-export const soundsFiltered = reactive([])
-export const categoriesFiltered = reactive([])
-export const subcategoriesFiltered = reactive([])
-
-export function filterSounds(filter){
-    //reset list first
-    //for (var j=0;j<soundsFiltered.length; j++){
-     //   soundsFiltered.pop()
-    //}
-    soundsFiltered.length=0
-    for (var i=0;i<sounds.length; i++){
-        let name = sounds[i].name
-        if (name.includes(filter)){
-            soundsFiltered.push(sounds[i])
-        }
-    }
-    console.log(soundsFiltered)
-}
-
 export const sounds = reactive([
     {
         "id": 1,
@@ -119,7 +62,7 @@ export const sounds = reactive([
         "name": "dark-future-logo-196217",
         "duration": 0.0,
         "play_count": 0,
-        "category_id": 1,
+        "category_id": 3,
         "subcategory_id": 1
     },
     {
@@ -127,7 +70,7 @@ export const sounds = reactive([
         "name": "stab-f-01-brvhrtz-224599",
         "duration": 0.0,
         "play_count": 0,
-        "category_id": 1,
+        "category_id": 3,
         "subcategory_id": 1
     },
     {
@@ -135,7 +78,7 @@ export const sounds = reactive([
         "name": "applause-cheer-236786",
         "duration": 0.0,
         "play_count": 0,
-        "category_id": 1,
+        "category_id": 2,
         "subcategory_id": 2
     }
 ])
@@ -217,3 +160,44 @@ export const subcategories = reactive([
         "category_id": 3
     }
 ])
+
+
+export const soundsFiltered = reactive([])
+export const categoriesFiltered = reactive([])
+export const subcategoriesFiltered = reactive([])
+
+export function filterSounds(filter) {
+    soundsFiltered.length = 0
+
+    for (var i = 0; i < sounds.length; i++) {
+        let name = sounds[i].name
+        if (name.includes(filter)) {
+            soundsFiltered.push(sounds[i])
+        }
+    }
+}
+
+export function filterSubCategories(id, e){
+    subcategoriesFiltered.length = 0
+    for (var i = 0; i < subcategories.length; i++) {
+        if (id === subcategories[i].category_id) {
+            subcategoriesFiltered.push(subcategories[i])
+        }
+    }
+
+    soundsFiltered.length = 0
+    for (var i = 0; i < sounds.length; i++) {
+        if (id === sounds[i].category_id) {
+            soundsFiltered.push(sounds[i])
+        }
+    }
+}
+
+export function filterSoundsBySubCatergorie(id, e){
+    soundsFiltered.length = 0
+    for (var i = 0; i < sounds.length; i++) {
+        if (id === sounds[i].subcategory_id) {
+            soundsFiltered.push(sounds[i])
+        }
+    }
+}
