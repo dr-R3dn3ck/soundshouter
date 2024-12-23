@@ -11,10 +11,9 @@
     </header>
 
     <body class="dark:bg-gray-800">
-        <div class="sm:ml-64 bg-white dark:bg-gray-900 h-auto min-h-10">
+        <div class="sticky top-36 z-20 sm:ml-64 bg-white dark:bg-gray-950 h-auto min-h-12">
             <SubCatElement v-for="sub in subcategoriesFiltered" :id="sub.id" :subcat="sub.name"
                 @click-sub-cat-event="filterSoundsBySubCatergorie">
-
             </SubCatElement>
         </div>
 
