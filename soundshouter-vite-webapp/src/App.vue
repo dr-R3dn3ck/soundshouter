@@ -5,44 +5,51 @@
     </head>
 
     <header class="sticky top-0 z-20">
-        <NavBar @type-Event="filterSounds" />
-
+        <div>
+            <NavBar @type-Event="filterSounds" />
+        </div>
     </header>
 
     <body class="dark:bg-gray-800">
+        <div class="sm:ml-64 bg-white dark:bg-gray-900 h-auto min-h-10">
+            <SubCatElement v-for="sub in subcategoriesFiltered" :id="sub.id" :subcat="sub.name"
+                @click-sub-cat-event="filterSoundsBySubCatergorie">
 
+            </SubCatElement>
+        </div>
 
+        <div>
+            <SoundTable>
+                <template #soundelements>
+
+                    <SoundElement v-for="sound in soundsFiltered" :id="sound.id" :name="sound.name"
+                        :duration="sound.duration" :play_count="sound.play_count" :category_id="sound.category_id"
+                        :caterory="sound.category" :subcategory_id="sound.subcategory_id" @emit-shout-event="shoutNow">
+
+                    </SoundElement>
+                </template>
+            </SoundTable>
+        </div>
+    </body>
+
+    <div>
         <SideBar>
             <template #element>
-                <SideBarElement v-for="category in categories" :name="category.name" :id="category.id"
-                    @click-cat-event="filterSubCategories">
-                </SideBarElement>
+                <div>
+                    <SideBarElement v-for="category in categories" :name="category.name" :id="category.id"
+                        @click-cat-event="filterSubCategories">
+                    </SideBarElement>
+                </div>
             </template>
 
         </SideBar>
+    </div>
 
-        <SoundTable>
-            <template #subcat>
-                <SubCatElement v-for="sub in subcategoriesFiltered" :id="sub.id" :subcat="sub.name" @click-sub-cat-event="filterSoundsBySubCatergorie">
-
-                </SubCatElement>
-            </template>
-
-            <template #soundelements>
-                <SoundElement v-for="sound in soundsFiltered" :id="sound.id" :name="sound.name" :duration="sound.duration"
-                    :play_count="sound.play_count" :category_id="sound.category_id" :caterory="sound.category"
-                    :subcategory_id="sound.subcategory_id" @emit-shout-event="shoutNow">
-
-                </SoundElement>
-            </template>
-        </SoundTable>
-
-
-        <footer class="p-4 sm:ml-64 bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20">
+    <footer class="p-4 sm:ml-64 bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20">
+        <div>
             <Footer />
-        </footer>
-
-    </body>
+        </div>
+    </footer>
 
 
 </template>
@@ -54,7 +61,7 @@ import NavBar from "./components/NavBar.vue"
 import Footer from "./components/Footer.vue"
 import SideBar from "./components/SideBar.vue"
 import SideBarElement from "./components/SideBarElement.vue"
-import { categories, filterSounds, soundsFiltered, subcategoriesFiltered, filterSubCategories , filterSoundsBySubCatergorie, shoutNow} from "./js/data.js"
+import { categories, filterSounds, soundsFiltered, subcategoriesFiltered, filterSubCategories, filterSoundsBySubCatergorie, shoutNow } from "./js/data.js"
 import SubCatElement from "./components/SubCatElement.vue"
 import SoundElement from './components/SoundElement.vue';
 
