@@ -11,16 +11,16 @@
     </header>
 
     <body class="dark:bg-gray-800">
-
-        <div class="sticky top-36 z-20 sm:ml-64 bg-white dark:bg-gray-950 h-auto min-h-12" 
-        :class="sideBarState === false ? 'ml-64' : 'ml-64'">
+    
+        <div class="sticky top-36 z-20 bg-white dark:bg-gray-950 h-auto min-h-12"
+            :class="sideBarState === true ? 'ml-64' : ''">
             <SubCatElement v-for="sub in subcategoriesFiltered" :id="sub.id" :subcat="sub.name"
                 @click-sub-cat-event="filterSoundsBySubCatergorie">
             </SubCatElement>
         </div>
 
         <div>
-            <SoundTable>
+            <SoundTable :barState="sideBarState">
                 <template #soundelements>
 
                     <SoundElement v-for="sound in soundsFiltered" :id="sound.id" :name="sound.name"
@@ -46,8 +46,8 @@
         </SideBar>
     </div>
 
-    <footer class="p-4 sm:ml-64 bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20"
-    :class="sideBarState === false ? 'ml-0' : 'ml-64'">
+    <footer class="p-4 bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20"
+    :class="sideBarState === true ? 'ml-64' : ''">
         <div>
             <Footer />
         </div>

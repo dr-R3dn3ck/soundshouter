@@ -1,17 +1,21 @@
 <script setup>
 
-import { onMounted } from 'vue'
+import { onMounted, defineProps } from 'vue'
 import { initFlowbite } from 'flowbite'
 
 // initialize components based on data attribute selectors
 onMounted(() => {
     initFlowbite();
 })
+defineProps({
+    barState: Boolean
+})
 
 </script>
 
 <template class="">
-        <div class="max-lg:overflow-auto min-h-screen shadow-md sm:rounded-lg sm:ml-64">
+        <div class="max-lg:overflow-auto min-h-screen shadow-md sm:rounded-lg"
+        :class="barState === true ? 'ml-64' : ''">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="max-lg:hidden sticky top-48 z-20 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
