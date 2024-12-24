@@ -22,7 +22,18 @@ Das Programm soll folgende Eingabemethoden unterstützen:
 # Installation
 Installationsvorraussetzungen:
 1. rustup / rust
-2. cargo build
+
+sqlite3??
+
+linux audio dependencies (rodio)
+cpal
+debian: libasound2-dev
+fedora: alsa-lib-devel
+
+*Kompilieren*
+```bash
+cargo build
+```
 
 *Sounds importieren*
 ```bash

@@ -1,5 +1,4 @@
-#[cfg(feature= "gui")]
-mod gui;
+
 mod broker;
 mod db;
 mod audio_player;
@@ -57,9 +56,10 @@ enum Commands {
         #[arg(long = "include-config", help = "delete config files", default_value = "false")]
         include_config: bool,
     },
-    /// run gui
-    #[cfg(feature = "gui")]
-    Gui,
+    Config {
+        #[arg(long = "data-dir", help = "print data directory")]
+        data_dir: bool,
+    },
     Serve,
 }
 
@@ -155,10 +155,11 @@ fn main() {
                     }
                 }
             },
-            #[cfg(feature = "gui")]
-            Commands::Gui => {
-                let _result = gui::main_window(&conf.general.db_uri);
-            }
+            Commands::Config { data_dir } => {
+                if data_dir {
+                    println!("{}", dirs.data_dir.to_str().unwrap_or(""));
+                }
+            },
             Commands::Serve => {
                 let _result = run(conf.general.db_uri.clone(),
                                   dirs.queue_conf.to_str()
