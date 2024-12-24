@@ -11,7 +11,9 @@
     </header>
 
     <body class="dark:bg-gray-800">
-        <div class="sticky top-36 z-20 sm:ml-64 bg-white dark:bg-gray-950 h-auto min-h-12">
+
+        <div class="sticky top-36 z-20 sm:ml-64 bg-white dark:bg-gray-950 h-auto min-h-12" 
+        :class="sideBarState === false ? 'ml-64' : 'ml-64'">
             <SubCatElement v-for="sub in subcategoriesFiltered" :id="sub.id" :subcat="sub.name"
                 @click-sub-cat-event="filterSoundsBySubCatergorie">
             </SubCatElement>
@@ -32,7 +34,7 @@
     </body>
 
     <div>
-        <SideBar>
+        <SideBar :barState="sideBarState" @switch-side-bar-state="changeSideBatState">
             <template #element>
                 <div>
                     <SideBarElement v-for="category in categories" :name="category.name" :id="category.id"
@@ -44,7 +46,8 @@
         </SideBar>
     </div>
 
-    <footer class="p-4 sm:ml-64 bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20">
+    <footer class="p-4 sm:ml-64 bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20"
+    :class="sideBarState === false ? 'ml-0' : 'ml-64'">
         <div>
             <Footer />
         </div>
@@ -60,7 +63,7 @@ import NavBar from "./components/NavBar.vue"
 import Footer from "./components/Footer.vue"
 import SideBar from "./components/SideBar.vue"
 import SideBarElement from "./components/SideBarElement.vue"
-import { categories, filterSounds, soundsFiltered, subcategoriesFiltered, filterSubCategories, filterSoundsBySubCatergorie, shoutNow } from "./js/data.js"
+import { categories, filterSounds, soundsFiltered, subcategoriesFiltered, filterSubCategories, filterSoundsBySubCatergorie, shoutNow, sideBarState, changeSideBatState } from "./js/data.js"
 import SubCatElement from "./components/SubCatElement.vue"
 import SoundElement from './components/SoundElement.vue';
 

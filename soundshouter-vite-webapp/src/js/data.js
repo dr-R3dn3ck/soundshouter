@@ -165,6 +165,17 @@ export const subcategories = reactive([
 export const soundsFiltered = reactive([])
 export const categoriesFiltered = reactive([])
 export const subcategoriesFiltered = reactive([])
+export const sideBarState = ref(true)
+
+export function changeSideBatState(){
+    if (sideBarState.value === true){
+        sideBarState.value = false
+    }
+    else{
+        sideBarState.value = true
+    }
+    console.log(sideBarState.value)
+}
 
 export function filterSounds(filter) {
     soundsFiltered.length = 0
