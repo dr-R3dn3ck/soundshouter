@@ -16,7 +16,7 @@ defineEmits(["typeEvent"])
 <template>
     <nav class="bg-white border-gray-200 dark:bg-gray-900">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-8">
-            <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <img src="../assets/shouting-gamer.svg" class="h-20 rounded-full bg-white" alt="Soundshouter Icon" />
                 <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Soundshouter</span>
             </a>
