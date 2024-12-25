@@ -1,5 +1,11 @@
+use std::path::PathBuf;
 use crate::db::models::{Category, Sound, SubCategory};
 use crate::error::AppError;
+use rust_embed::{RustEmbed};
+
+#[derive(RustEmbed)]
+#[folder = "../soundshouter-vite-webapp/dist"]
+struct Asset;
 
 use log::{debug};
 
@@ -176,6 +182,27 @@ fn shutdown(shutdown: Shutdown) -> &'static str {
     "Shutting down..."
 }
 
+use rocket::http::ContentType;
+use std::borrow::Cow;
+use std::ffi::OsStr;
+#[get("/<file..>")]
+fn web_app(file: PathBuf) -> Option<(ContentType, Cow<'static, [u8]>)> {
+    let _file = if file.display().to_string() == "" {
+        PathBuf::from("index.html".to_string())
+    }
+    else { file };
+    let filename = _file.display().to_string();
+
+    let asset = Asset::get(&filename)?;
+    let content_type = _file
+        .extension()
+        .and_then(OsStr::to_str)
+        .and_then(ContentType::from_extension)
+        .unwrap_or(ContentType::Bytes);
+
+    Some((content_type, asset.data))
+}
+
 #[rocket::main]
 pub async fn run_api() -> Result<(), rocket::Error> {
     #[derive(OpenApi)]
@@ -192,12 +219,9 @@ pub async fn run_api() -> Result<(), rocket::Error> {
     rocket::build()
         .attach(Db::fairing())
         .manage(conf)
-        .mount(
-            "/api/v1",
-            routes![
-                index, sounds, categories, subcategories, play,
-                shutdown
-            ])
+        .mount("/api/v1", routes![
+            index, sounds, categories, subcategories, play, shutdown])
+        .mount("/", routes![web_app])
         .mount(
             "/",
             SwaggerUi::new("/swagger-ui/<_..>")
