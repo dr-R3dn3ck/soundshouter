@@ -288,4 +288,11 @@ export function filterSoundsBySubCatergorie(id, e) {
 
 export function shoutNow(id, e) {
     console.log(id)
+    axios.post('http://127.0.0.1:8000/api/v1/play/'+id)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 }
