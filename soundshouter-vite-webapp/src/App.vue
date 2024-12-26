@@ -63,14 +63,13 @@ import NavBar from "./components/NavBar.vue"
 import Footer from "./components/Footer.vue"
 import SideBar from "./components/SideBar.vue"
 import SideBarElement from "./components/SideBarElement.vue"
-import { categories, filterSounds, soundsFiltered, subcategoriesFiltered, filterSubCategories, filterSoundsBySubCatergorie, shoutNow, sideBarState, changeSideBatState } from "./js/data.js"
+import { categories, filterSounds, soundsFiltered, subcategoriesFiltered, filterSubCategories, filterSoundsBySubCatergorie, shoutNow, sideBarState, changeSideBatState, getSounds, getCategories, getSubcategories } from "./js/data.js"
 import SubCatElement from "./components/SubCatElement.vue"
 import SoundElement from './components/SoundElement.vue';
 
 import { reactive } from 'vue'
 import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'
-import axios, { isCancel, AxiosError } from 'axios';
 
 // initialize components based on data attribute selectors
 onMounted(() => {
@@ -78,6 +77,9 @@ onMounted(() => {
 })
 
 // Call Filter once to get all sounds when site is loaded
+getSounds()
+getCategories()
+getSubcategories()
 filterSounds("")
 
 // use emit to change data from child instead of props

@@ -1,6 +1,6 @@
 import { ref, reactive } from "vue"
 
-export const sounds = reactive([
+export const sounds1 = reactive([
     {
         "id": 1,
         "name": "applause-cheer-236786",
@@ -83,95 +83,159 @@ export const sounds = reactive([
     }
 ])
 
-export const categories = reactive([
-    {
-        "id": 1,
-        "name": "terstcategory"
-    },
-    {
-        "id": 2,
-        "name": "testcategoroie2"
-    },
-    {
-        "id": 3,
-        "name": "testcategorie1"
-    }
-])
+// export const categories = reactive([
+//     {
+//         "id": 1,
+//         "name": "terstcategory"
+//     },
+//     {
+//         "id": 2,
+//         "name": "testcategoroie2"
+//     },
+//     {
+//         "id": 3,
+//         "name": "testcategorie1"
+//     }
+// ])
 
-export const subcategories = reactive([
-    {
-        "id": 1,
-        "name": "Subcategory2",
-        "category_id": 1
-    },
-    {
-        "id": 2,
-        "name": "Subcategory1",
-        "category_id": 1
-    },
-    {
-        "id": 3,
-        "name": "subcatergory3",
-        "category_id": 3
-    },
-    {
-        "id": 4,
-        "name": "subcatergory3",
-        "category_id": 3
-    },
-    {
-        "id": 5,
-        "name": "subcatergory3",
-        "category_id": 3
-    },
-    {
-        "id": 6,
-        "name": "subcatergory3",
-        "category_id": 3
-    },
-    {
-        "id": 7,
-        "name": "subcatergory3",
-        "category_id": 3
-    },
-    {
-        "id": 8,
-        "name": "subcatergory3",
-        "category_id": 3
-    },
-    {
-        "id": 9,
-        "name": "subcatergory3",
-        "category_id": 3
-    },
-    {
-        "id": 10,
-        "name": "subcatergory3",
-        "category_id": 3
-    },
-    {
-        "id": 11,
-        "name": "subcatergory3",
-        "category_id": 3
-    },
-    {
-        "id": 12,
-        "name": "subcatergory3",
-        "category_id": 3
-    }
-])
+// export const subcategories = reactive([
+//     {
+//         "id": 1,
+//         "name": "Subcategory2",
+//         "category_id": 1
+//     },
+//     {
+//         "id": 2,
+//         "name": "Subcategory1",
+//         "category_id": 1
+//     },
+//     {
+//         "id": 3,
+//         "name": "subcatergory3",
+//         "category_id": 3
+//     },
+//     {
+//         "id": 4,
+//         "name": "subcatergory3",
+//         "category_id": 3
+//     },
+//     {
+//         "id": 5,
+//         "name": "subcatergory3",
+//         "category_id": 3
+//     },
+//     {
+//         "id": 6,
+//         "name": "subcatergory3",
+//         "category_id": 3
+//     },
+//     {
+//         "id": 7,
+//         "name": "subcatergory3",
+//         "category_id": 3
+//     },
+//     {
+//         "id": 8,
+//         "name": "subcatergory3",
+//         "category_id": 3
+//     },
+//     {
+//         "id": 9,
+//         "name": "subcatergory3",
+//         "category_id": 3
+//     },
+//     {
+//         "id": 10,
+//         "name": "subcatergory3",
+//         "category_id": 3
+//     },
+//     {
+//         "id": 11,
+//         "name": "subcatergory3",
+//         "category_id": 3
+//     },
+//     {
+//         "id": 12,
+//         "name": "subcatergory3",
+//         "category_id": 3
+//     }
+// ])
+
+export const sounds = ref([])
+export const subcategories = ref([])
+export const categories = ref([])
+
+import axios, { isCancel, AxiosError } from 'axios';
+// Axios
+//const axios = require('axios');
+export function getSounds() {
+    // Make a request for a user with a given ID
+    axios.get('http://127.0.0.1:8000/api/v1/sounds')
+        .then(function (response) {
+            // handle success
+            console.log(response)
+            console.log(response.data)
+            sounds.value = response.data
+            // for(const item in response.data) {
+            //     sounds.values.push(item)
+            // }
+            //sounds.value = response.data
+            console.log("first sounds.value then sounds1")
+            console.log(sounds.value)
+            console.log(sounds1)
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .finally(function () {
+            // always executed
+        });
+}
+
+export function getCategories() {
+    // Make a request forv1 a user with a given ID
+    axios.get('http://127.0.0.1:8000/api/v1/categories')
+        .then(function (response) {
+            // handle success
+            categories.value = response.data
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .finally(function () {
+            // always executed
+        });
+}
+
+export function getSubcategories() {
+    // Make a request for a user with a given ID
+    axios.get('http://127.0.0.1:8000/api/v1/subcategories')
+        .then(function (response) {
+            // handle success
+            subcategories.value = response.data
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .finally(function () {
+            // always executed
+        });
+}
 
 
-export const soundsFiltered = reactive([])
-export const categoriesFiltered = reactive([])
-export const subcategoriesFiltered = reactive([])
+export const soundsFiltered = ref([])
+export const categoriesFiltered = ref([])
+export const subcategoriesFiltered = ref([])
 export const sideBarState = ref(true)
 
-export function changeSideBatState(){
-    if (sideBarState.value === true){
+export function changeSideBatState() {
+    if (sideBarState.value === true) {
         sideBarState.value = false
     }
-    else{
+    else {
         sideBarState.value = true
     }
     console.log(sideBarState.value)
@@ -179,40 +243,48 @@ export function changeSideBatState(){
 
 export function filterSounds(filter) {
     soundsFiltered.length = 0
-
+    console.log("length")
+    console.log(sounds.length)
+    console.log(sounds.value)
     for (var i = 0; i < sounds.length; i++) {
-        let name = sounds[i].name
+        let name = sounds.value[i].name
+        console.log("name of sound checked")
+            console.log(sounds.value[i].name)
         if (name.includes(filter)) {
-            soundsFiltered.push(sounds[i])
+            console.log("sounds matching name")
+            console.log(sounds.value[i])
+            soundsFiltered.value.push(sounds.value[i])
         }
     }
+    console.log("HUHU")
+    console.log(soundsFiltered)
 }
 
-export function filterSubCategories(id, e){
+export function filterSubCategories(id, e) {
     subcategoriesFiltered.length = 0
-    for (var i = 0; i < subcategories.length; i++) {
-        if (id === subcategories[i].category_id) {
-            subcategoriesFiltered.push(subcategories[i])
+    for (var i = 0; i < subcategories.value.length; i++) {
+        if (id === subcategories.value[i].category_id) {
+            subcategoriesFiltered.push(subcategories.value[i])
         }
     }
 
     soundsFiltered.length = 0
-    for (var i = 0; i < sounds.length; i++) {
-        if (id === sounds[i].category_id) {
-            soundsFiltered.push(sounds[i])
+    for (var i = 0; i < sounds.value.length; i++) {
+        if (id === sounds.value[i].category_id) {
+            soundsFiltered.push(sounds.value[i])
         }
     }
 }
 
-export function filterSoundsBySubCatergorie(id, e){
+export function filterSoundsBySubCatergorie(id, e) {
     soundsFiltered.length = 0
-    for (var i = 0; i < sounds.length; i++) {
-        if (id === sounds[i].subcategory_id) {
-            soundsFiltered.push(sounds[i])
+    for (var i = 0; i < sounds.value.length; i++) {
+        if (id === sounds.value[i].subcategory_id) {
+            soundsFiltered.push(sounds.value[i])
         }
     }
 }
 
-export function shoutNow(id, e){
+export function shoutNow(id, e) {
     console.log(id)
 }

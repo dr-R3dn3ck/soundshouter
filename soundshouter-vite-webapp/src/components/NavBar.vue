@@ -1,11 +1,12 @@
 <script setup>
-import { onMounted, defineEmits, ref } from 'vue'
+import { onMounted, defineEmits, ref, defineProps } from 'vue'
 import { initFlowbite } from 'flowbite'
 
 // initialize components based on data attribute selectors
 onMounted(() => {
     initFlowbite();
 })
+
 
 const filter = ref("")
 
