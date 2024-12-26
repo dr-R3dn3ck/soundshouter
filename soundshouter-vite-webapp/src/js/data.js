@@ -1,87 +1,87 @@
 import { ref, reactive } from "vue"
 
-export const sounds1 = reactive([
-    {
-        "id": 1,
-        "name": "applause-cheer-236786",
-        "duration": 0.0,
-        "play_count": 0,
-        "category_id": 1,
-        "subcategory_id": null
-    },
-    {
-        "id": 2,
-        "name": "relaxing-guitar-loop-v5-245859",
-        "duration": 0.0,
-        "play_count": 0,
-        "category_id": 1,
-        "subcategory_id": null
-    },
-    {
-        "id": 3,
-        "name": "astral-creepy-dark-logo-254198",
-        "duration": 0.0,
-        "play_count": 0,
-        "category_id": 1,
-        "subcategory_id": null
-    },
-    {
-        "id": 4,
-        "name": "dark-future-logo-196217",
-        "duration": 0.0,
-        "play_count": 0,
-        "category_id": 1,
-        "subcategory_id": null
-    },
-    {
-        "id": 5,
-        "name": "applause-cheer-236786",
-        "duration": 0.0,
-        "play_count": 0,
-        "category_id": 1,
-        "subcategory_id": 1
-    },
-    {
-        "id": 6,
-        "name": "relaxing-guitar-loop-v5-245859",
-        "duration": 0.0,
-        "play_count": 0,
-        "category_id": 1,
-        "subcategory_id": 1
-    },
-    {
-        "id": 7,
-        "name": "astral-creepy-dark-logo-254198",
-        "duration": 0.0,
-        "play_count": 0,
-        "category_id": 1,
-        "subcategory_id": 1
-    },
-    {
-        "id": 8,
-        "name": "dark-future-logo-196217",
-        "duration": 0.0,
-        "play_count": 0,
-        "category_id": 3,
-        "subcategory_id": 1
-    },
-    {
-        "id": 9,
-        "name": "stab-f-01-brvhrtz-224599",
-        "duration": 0.0,
-        "play_count": 0,
-        "category_id": 3,
-        "subcategory_id": 1
-    },
-    {
-        "id": 10,
-        "name": "applause-cheer-236786",
-        "duration": 0.0,
-        "play_count": 0,
-        "category_id": 2,
-        "subcategory_id": 2
-    }
-])
+// export const sounds = reactive([
+//     {
+//         "id": 1,
+//         "name": "applause-cheer-236786",
+//         "duration": 0.0,
+//         "play_count": 0,
+//         "category_id": 1,
+//         "subcategory_id": null
+//     },
+//     {
+//         "id": 2,
+//         "name": "relaxing-guitar-loop-v5-245859",
+//         "duration": 0.0,
+//         "play_count": 0,
+//         "category_id": 1,
+//         "subcategory_id": null
+//     },
+//     {
+//         "id": 3,
+//         "name": "astral-creepy-dark-logo-254198",
+//         "duration": 0.0,
+//         "play_count": 0,
+//         "category_id": 1,
+//         "subcategory_id": null
+//     },
+//     {
+//         "id": 4,
+//         "name": "dark-future-logo-196217",
+//         "duration": 0.0,
+//         "play_count": 0,
+//         "category_id": 1,
+//         "subcategory_id": null
+//     },
+//     {
+//         "id": 5,
+//         "name": "applause-cheer-236786",
+//         "duration": 0.0,
+//         "play_count": 0,
+//         "category_id": 1,
+//         "subcategory_id": 1
+//     },
+//     {
+//         "id": 6,
+//         "name": "relaxing-guitar-loop-v5-245859",
+//         "duration": 0.0,
+//         "play_count": 0,
+//         "category_id": 1,
+//         "subcategory_id": 1
+//     },
+//     {
+//         "id": 7,
+//         "name": "astral-creepy-dark-logo-254198",
+//         "duration": 0.0,
+//         "play_count": 0,
+//         "category_id": 1,
+//         "subcategory_id": 1
+//     },
+//     {
+//         "id": 8,
+//         "name": "dark-future-logo-196217",
+//         "duration": 0.0,
+//         "play_count": 0,
+//         "category_id": 3,
+//         "subcategory_id": 1
+//     },
+//     {
+//         "id": 9,
+//         "name": "stab-f-01-brvhrtz-224599",
+//         "duration": 0.0,
+//         "play_count": 0,
+//         "category_id": 3,
+//         "subcategory_id": 1
+//     },
+//     {
+//         "id": 10,
+//         "name": "applause-cheer-236786",
+//         "duration": 0.0,
+//         "play_count": 0,
+//         "category_id": 2,
+//         "subcategory_id": 2
+//     }
+// ])
 
 // export const categories = reactive([
 //     {
@@ -165,7 +165,7 @@ export const sounds = ref([])
 export const subcategories = ref([])
 export const categories = ref([])
 
-import axios, { isCancel, AxiosError } from 'axios';
+import axios from 'axios';
 // Axios
 //const axios = require('axios');
 export function getSounds() {
@@ -173,16 +173,17 @@ export function getSounds() {
     axios.get('http://127.0.0.1:8000/api/v1/sounds')
         .then(function (response) {
             // handle success
+            console.log("response data")
             console.log(response)
             console.log(response.data)
-            sounds.value = response.data
-            // for(const item in response.data) {
-            //     sounds.values.push(item)
-            // }
+            //sounds.value = response.data
+            for (var i = 0; i < response.data.length; i++) {
+                sounds.value.push(response.data[i])
+            }
             //sounds.value = response.data
             console.log("first sounds.value then sounds1")
             console.log(sounds.value)
-            console.log(sounds1)
+            filterSounds("", sounds)
         })
         .catch(function (error) {
             // handle error
@@ -242,11 +243,11 @@ export function changeSideBatState() {
 }
 
 export function filterSounds(filter) {
-    soundsFiltered.length = 0
+    soundsFiltered.value.length = 0
     console.log("length")
-    console.log(sounds.length)
+    console.log(sounds.value.length)
     console.log(sounds.value)
-    for (var i = 0; i < sounds.length; i++) {
+    for (var i = 0; i < sounds.value.length; i++) {
         let name = sounds.value[i].name
         console.log("name of sound checked")
             console.log(sounds.value[i].name)
@@ -261,26 +262,26 @@ export function filterSounds(filter) {
 }
 
 export function filterSubCategories(id, e) {
-    subcategoriesFiltered.length = 0
+    subcategoriesFiltered.value.length = 0
     for (var i = 0; i < subcategories.value.length; i++) {
         if (id === subcategories.value[i].category_id) {
-            subcategoriesFiltered.push(subcategories.value[i])
+            subcategoriesFiltered.value.push(subcategories.value[i])
         }
     }
 
-    soundsFiltered.length = 0
+    soundsFiltered.value.length = 0
     for (var i = 0; i < sounds.value.length; i++) {
         if (id === sounds.value[i].category_id) {
-            soundsFiltered.push(sounds.value[i])
+            soundsFiltered.value.push(sounds.value[i])
         }
     }
 }
 
 export function filterSoundsBySubCatergorie(id, e) {
-    soundsFiltered.length = 0
+    soundsFiltered.value.length = 0
     for (var i = 0; i < sounds.value.length; i++) {
         if (id === sounds.value[i].subcategory_id) {
-            soundsFiltered.push(sounds.value[i])
+            soundsFiltered.value.push(sounds.value[i])
         }
     }
 }

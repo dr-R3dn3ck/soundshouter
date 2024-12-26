@@ -80,24 +80,10 @@ onMounted(() => {
 getSounds()
 getCategories()
 getSubcategories()
-filterSounds("")
+//filterSounds("")
 
 // use emit to change data from child instead of props
 // https://stackoverflow.com/questions/40915436/vuejs-update-parent-data-from-child-component
 
-
-// Make a request for a user with a given ID
-//axios.get('http://127.0.0.1:8000/api/v1/sounds')
-//  .then(function (response) {
-// handle success
-//    console.log(response);
-// })
-// .catch(function (error) {
-// handle error
-//    console.log(error);
-//  })
-//  .finally(function () {
-// always executed
-//  });
 
 </script>
