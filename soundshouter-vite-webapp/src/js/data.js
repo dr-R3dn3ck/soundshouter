@@ -170,7 +170,7 @@ import axios from 'axios';
 //const axios = require('axios');
 export function getSounds() {
     // Make a request for a user with a given ID
-    axios.get('http://127.0.0.1:8000/api/v1/sounds?limit=1000')
+    axios.get('/api/v1/sounds?limit=1000')
         .then(function (response) {
             // handle success
             console.log("response data")
@@ -196,7 +196,7 @@ export function getSounds() {
 
 export function getCategories() {
     // Make a request forv1 a user with a given ID
-    axios.get('http://127.0.0.1:8000/api/v1/categories')
+    axios.get('/api/v1/categories')
         .then(function (response) {
             // handle success
             categories.value = response.data
@@ -212,7 +212,7 @@ export function getCategories() {
 
 export function getSubcategories() {
     // Make a request for a user with a given ID
-    axios.get('http://127.0.0.1:8000/api/v1/subcategories')
+    axios.get('/api/v1/subcategories')
         .then(function (response) {
             // handle success
             subcategories.value = response.data
@@ -288,7 +288,7 @@ export function filterSoundsBySubCatergorie(id, e) {
 
 export function shoutNow(id, e) {
     console.log(id)
-    axios.post('http://127.0.0.1:8000/api/v1/play/'+id)
+    axios.post('/api/v1/play/'+id)
       .then(function (response) {
         console.log(response);
       })
