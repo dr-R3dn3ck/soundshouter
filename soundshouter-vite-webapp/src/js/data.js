@@ -170,7 +170,7 @@ import axios from 'axios';
 //const axios = require('axios');
 export function getSounds() {
     // Make a request for a user with a given ID
-    axios.get('http://127.0.0.1:8000/api/v1/sounds')
+    axios.get('http://127.0.0.1:8000/api/v1/sounds?limit=1000')
         .then(function (response) {
             // handle success
             console.log("response data")
