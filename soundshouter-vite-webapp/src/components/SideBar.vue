@@ -26,7 +26,7 @@ onMounted(() => {
 
     <div>
         <button @click="$emit('switchSideBarState')" class="dark:bg-slate-700 rounded-lg fixed top-2/4 z-40"
-            :class="barState === false ? 'rotate-180 left-0' : 'left-56'">
+            :class="barState === false ? 'rotate-180 left-0' : 'left-52'">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round"

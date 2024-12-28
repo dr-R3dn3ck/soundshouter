@@ -1,10 +1,7 @@
 <template>
 
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-
     <header class="sticky top-0 z-20">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <div>
             <NavBar @type-Event="filterSounds" />
         </div>
