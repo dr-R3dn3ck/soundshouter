@@ -30,14 +30,14 @@ defineEmits(["emitShoutEvent"])
         <td class="w-60 px-6 py-4">
             {{ category_id }}
         </td>
-        <td class="w-32 px-6 py-4">
+        <td class="w-60 px-6 py-4">
             {{ duration }}
         </td>
-        <td class="w-32 px-6 py-4">
+        <td class="w-60 px-6 py-4">
             {{ play_count }}
         </td>
         <td>
-            <button @click="$emit('emitShoutEvent', id, $event)" class="w-32 flex flex-row flex-auto place-items-center px-6 py-4 hover:bg-blue-600 hover:rounded-xl">
+            <button @click="$emit('emitShoutEvent', id, $event)" class="w-80 flex flex-row flex-auto place-items-center px-6 py-4 hover:bg-blue-600 hover:rounded-xl">
                 <b class="font-medium text-blue-600 dark:text-blue-500">SHOUT</b>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                     <path fill="currentColor"

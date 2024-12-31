@@ -9,12 +9,12 @@
 
     <body class="dark:bg-gray-800">
     
-        <div class="sticky top-36 z-20 bg-white dark:bg-gray-950 h-auto min-h-12"
+        <!-- <div class="sticky top-36 z-20 bg-white dark:bg-gray-950 h-auto min-h-12"
             :class="sideBarState === true ? 'ml-64' : ''">
             <SubCatElement v-for="sub in subcategoriesFiltered" :id="sub.id" :subcat="sub.name"
                 @click-sub-cat-event="filterSoundsBySubCatergorie">
             </SubCatElement>
-        </div>
+        </div> -->
 
         <div>
             <SoundTable :barState="sideBarState">
@@ -46,7 +46,7 @@
     <footer class="p-4 bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20"
     :class="sideBarState === true ? 'ml-64' : ''">
         <div>
-            <Footer />
+            <Footer :subCatProps="subcategoriesFiltered"/>
         </div>
     </footer>
 
@@ -61,11 +61,10 @@ import Footer from "./components/Footer.vue"
 import SideBar from "./components/SideBar.vue"
 import SideBarElement from "./components/SideBarElement.vue"
 import { categories, filterSounds, soundsFiltered, subcategoriesFiltered, filterSubCategories, filterSoundsBySubCatergorie, shoutNow, sideBarState, changeSideBatState, getSounds, getCategories, getSubcategories } from "./js/data.js"
-import SubCatElement from "./components/SubCatElement.vue"
 import SoundElement from './components/SoundElement.vue';
 
-import { reactive } from 'vue'
 import { onMounted } from 'vue'
+import { provide } from 'vue';
 import { initFlowbite } from 'flowbite'
 
 // initialize components based on data attribute selectors
@@ -73,6 +72,13 @@ onMounted(() => {
     initFlowbite();
 })
 
+// Used Provide Inject feature beacuse emit is in parent->child-Suchild
+// https://vuejs.org/guide/components/provide-inject.html
+// https://stackoverflow.com/questions/75812064/vue-3-how-to-forward-all-emitted-events-to-a-parent-component
+function activateOnEvent(id, event) {
+    filterSoundsBySubCatergorie(id, event)
+}
+provide('parentFn', activateOnEvent);
 // Call Filter once to get all sounds when site is loaded
 getSounds()
 getCategories()
