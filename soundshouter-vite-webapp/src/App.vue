@@ -8,13 +8,6 @@
     </header>
 
     <body class="dark:bg-gray-800">
-    
-        <!-- <div class="sticky top-36 z-20 bg-white dark:bg-gray-950 h-auto min-h-12"
-            :class="sideBarState === true ? 'ml-64' : ''">
-            <SubCatElement v-for="sub in subcategoriesFiltered" :id="sub.id" :subcat="sub.name"
-                @click-sub-cat-event="filterSoundsBySubCatergorie">
-            </SubCatElement>
-        </div> -->
 
         <div>
             <SoundTable :barState="sideBarState">
