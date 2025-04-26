@@ -1,101 +1,101 @@
 <template>
-
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-
+  <div>
     <header class="sticky top-0 z-20">
-        <div>
-            <NavBar @type-Event="filterSounds" />
-        </div>
+      <NavBar @type-Event="filterSounds" />
     </header>
 
-    <body class="dark:bg-gray-800">
+    <main class="dark:bg-gray-800">
+      <SoundTable :barState="sideBarState">
+        <template #soundelements>
+          <SoundElement
+            v-for="sound in soundsFiltered"
+            :key="sound.id"
+            :id="sound.id"
+            :name="sound.name"
+            :duration="sound.duration"
+            :play_count="sound.play_count"
+            :category_id="sound.category_id"
+            :caterory="sound.category"
+            :subcategory_id="sound.subcategory_id"
+            @emit-shout-event="shoutNow"
+          />
+        </template>
+      </SoundTable>
+    </main>
 
-        <div class="sticky top-36 z-20 sm:ml-64 bg-white dark:bg-gray-950 h-auto min-h-12" 
-        :class="sideBarState === false ? 'ml-64' : 'ml-64'">
-            <SubCatElement v-for="sub in subcategoriesFiltered" :id="sub.id" :subcat="sub.name"
-                @click-sub-cat-event="filterSoundsBySubCatergorie">
-            </SubCatElement>
-        </div>
+    <SideBar
+      :barState="sideBarState"
+      @switch-side-bar-state="changeSideBarState"
+    >
+      <template #element>
+        <SideBarElement
+          v-for="category in categories"
+          :key="category.id"
+          :name="category.name"
+          :id="category.id"
+          @click-cat-event="filterSubCategories"
+        />
+      </template>
+    </SideBar>
 
-        <div>
-            <SoundTable>
-                <template #soundelements>
-
-                    <SoundElement v-for="sound in soundsFiltered" :id="sound.id" :name="sound.name"
-                        :duration="sound.duration" :play_count="sound.play_count" :category_id="sound.category_id"
-                        :caterory="sound.category" :subcategory_id="sound.subcategory_id" @emit-shout-event="shoutNow">
-
-                    </SoundElement>
-                </template>
-            </SoundTable>
-        </div>
-    </body>
-
-    <div>
-        <SideBar :barState="sideBarState" @switch-side-bar-state="changeSideBatState">
-            <template #element>
-                <div>
-                    <SideBarElement v-for="category in categories" :name="category.name" :id="category.id"
-                        @click-cat-event="filterSubCategories">
-                    </SideBarElement>
-                </div>
-            </template>
-
-        </SideBar>
-    </div>
-
-    <footer class="p-4 sm:ml-64 bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20"
-    :class="sideBarState === false ? 'ml-0' : 'ml-64'">
-        <div>
-            <Footer />
-        </div>
+    <footer
+      class="p-4 bg-gray-800 shadow dark:bg-gray-800 sticky bottom-0 z-20"
+      :class="{ 'ml-64': sideBarState }"
+    >
+      <Footer :subCatProps="subcategoriesFiltered" />
     </footer>
-
-
+  </div>
 </template>
 
-
 <script setup>
-import SoundTable from "./components/SoundTable.vue"
-import NavBar from "./components/NavBar.vue"
-import Footer from "./components/Footer.vue"
-import SideBar from "./components/SideBar.vue"
-import SideBarElement from "./components/SideBarElement.vue"
-import { categories, filterSounds, soundsFiltered, subcategoriesFiltered, filterSubCategories, filterSoundsBySubCatergorie, shoutNow, sideBarState, changeSideBatState } from "./js/data.js"
-import SubCatElement from "./components/SubCatElement.vue"
-import SoundElement from './components/SoundElement.vue';
-
-import { reactive } from 'vue'
-import { onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount, provide } from 'vue'
 import { initFlowbite } from 'flowbite'
-import axios, { isCancel, AxiosError } from 'axios';
 
-// initialize components based on data attribute selectors
+import NavBar from './components/NavBar.vue'
+import SoundTable from './components/SoundTable.vue'
+import SoundElement from './components/SoundElement.vue'
+import SideBar from './components/SideBar.vue'
+import SideBarElement from './components/SideBarElement.vue'
+import Footer from './components/Footer.vue'
+
+import {
+  categories,
+  filterSounds,
+  soundsFiltered,
+  subcategoriesFiltered,
+  filterSubCategories,
+  filterSoundsBySubCatergorie,
+  shoutNow
+} from './js/data.js'
+
+// Local reactive sidebar state
+const sideBarState = ref(true)
+
+function changeSideBarState() {
+  sideBarState.value = !sideBarState.value
+}
+
+// Auto-collapse on small screens
+function handleResize() {
+  const isSmall = window.matchMedia('(max-width: 1023px)').matches
+  sideBarState.value = !isSmall
+}
+
 onMounted(() => {
-    initFlowbite();
+  initFlowbite()
+  filterSounds("")
+  handleResize()
+  window.addEventListener('resize', handleResize)
 })
 
-// Call Filter once to get all sounds when site is loaded
-filterSounds("")
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+})
 
-// use emit to change data from child instead of props
-// https://stackoverflow.com/questions/40915436/vuejs-update-parent-data-from-child-component
+// Provide to child components
+function activateOnEvent(id, event) {
+  filterSoundsBySubCatergorie(id, event)
+}
 
-
-// Make a request for a user with a given ID
-//axios.get('http://127.0.0.1:8000/api/v1/sounds')
-//  .then(function (response) {
-// handle success
-//    console.log(response);
-// })
-// .catch(function (error) {
-// handle error
-//    console.log(error);
-//  })
-//  .finally(function () {
-// always executed
-//  });
-
+provide('parentFn', activateOnEvent)
 </script>
