@@ -75,9 +75,10 @@ npm run dev
         sudo apt update && \
         sudo apt install -y pkg-config libasound2-dev libsqlite3-dev && \
         if [ -d \"soundshouter\" ]; then rm -rf soundshouter; fi && \
-        git clone --branch unified --single-branch https://github.com/dr-R3dn3ck/soundshouter.git soundshouter && \
+        git clone https://github.com/dr-R3dn3ck/soundshouter.git &&\
         cd soundshouter/soundshouter-vite-webapp && \
         echo \"📁 Entered soundshouter-vite-webapp\" && ls -la && \
+        git switch unified && \
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash && \
         export NVM_DIR=\"$HOME/.nvm\" && \
         [ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\" && \
