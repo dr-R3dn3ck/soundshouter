@@ -101,3 +101,9 @@ npm run dev
 }
 ```
 
+```bash
+#run server with
+ROCKET_ADDRESS=0.0.0.0 target/debug/soundshouter serve
+
+```
+
