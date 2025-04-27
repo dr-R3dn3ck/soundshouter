@@ -64,3 +64,40 @@ npm run build
 npm run dev
 ```
 
+```bash
+# dev container
+{
+    "name": "Ubuntu",
+    "image": "mcr.microsoft.com/devcontainers/base:jammy",
+    "forwardPorts": [5173, 8000],  // Forward both port 5173 (for frontend) and port 8000 (for Rocket server)
+    "workspaceFolder": "/workspaces/Projects",
+    "postCreateCommand": "/bin/bash -c '\
+        sudo apt update && \
+        sudo apt install -y pkg-config libasound2-dev libsqlite3-dev && \
+        if [ -d \"soundshouter\" ]; then rm -rf soundshouter; fi && \
+        git clone --branch unified --single-branch https://github.com/dr-R3dn3ck/soundshouter.git soundshouter && \
+        cd soundshouter/soundshouter-vite-webapp && \
+        echo \"📁 Entered soundshouter-vite-webapp\" && ls -la && \
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash && \
+        export NVM_DIR=\"$HOME/.nvm\" && \
+        [ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\" && \
+        nvm install --lts && \
+        npm install -g vite && \
+        npm install && \
+        cd ../soundshouter-vite-webapp && \
+        npm install && \
+        npm run build && \
+        cd ../soundshouter && \
+        echo \"📁 Entered the soundshouter directory\" && ls -la && \
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh && \
+        source $HOME/.cargo/env && \
+        rustup install nightly && \
+        rustup default nightly && \
+        cargo build'"
+    ,
+    "ports": [
+        "8000:8000"  // Explicitly publish the 8000 port for Rocket server
+    ]
+}
+```
+
