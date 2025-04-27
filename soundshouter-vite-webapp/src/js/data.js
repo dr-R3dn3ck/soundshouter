@@ -6,64 +6,103 @@ export const categories = ref([])
 
 import axios from './axios';  // Import the Axios instance you configured
 // Axios
-//const axios = require('axios');
+
+// export function getSounds() {
+//     // Make a request for a user with a given ID
+//     axios.get('/api/v1/sounds?limit=1000')
+//         .then(function (response) {
+//             // handle success
+//             //console.log("response data")
+//             //console.log(response)
+//             //console.log(response.data)
+//             //sounds.value = response.data
+//             for (var i = 0; i < response.data.length; i++) {
+//                 sounds.value.push(response.data[i])
+//             }
+//             //sounds.value = response.data
+//             //console.log("first sounds.value then sounds1")
+//             //console.log(sounds.value)
+//             filterSounds("", sounds)
+//         })
+//         .catch(function (error) {
+//             // handle error
+//             console.log(error);
+//         })
+//         .finally(function () {
+//             // always executed
+//         });
+// }
+
+// export function getCategories() {
+//     // Make a request forv1 a user with a given ID
+//     axios.get('/api/v1/categories')
+//         .then(function (response) {
+//             // handle success
+//             categories.value = response.data
+//         })
+//         .catch(function (error) {
+//             // handle error
+//             console.log(error);
+//         })
+//         .finally(function () {
+//             // always executed
+//         });
+// }
+
+// export function getSubcategories() {
+//     // Make a request for a user with a given ID
+//     axios.get('/api/v1/subcategories')
+//         .then(function (response) {
+//             // handle success
+//             subcategories.value = response.data
+//         })
+//         .catch(function (error) {
+//             // handle error
+//             console.log(error);
+//         })
+//         .finally(function () {
+//             // always executed
+//         });
+// }
+
 export function getSounds() {
-    // Make a request for a user with a given ID
-    axios.get('/api/v1/sounds?limit=1000')
+    return axios.get('/api/v1/sounds?limit=1000') 
         .then(function (response) {
-            // handle success
-            console.log("response data")
-            console.log(response)
-            console.log(response.data)
-            //sounds.value = response.data
+            // console.log("response data")
+            // console.log(response)
+            //console.log(response.data)
             for (var i = 0; i < response.data.length; i++) {
                 sounds.value.push(response.data[i])
             }
-            //sounds.value = response.data
-            console.log("first sounds.value then sounds1")
-            console.log(sounds.value)
+            // console.log("first sounds.value then sounds1")
+            // console.log(sounds.value)
             filterSounds("", sounds)
         })
         .catch(function (error) {
-            // handle error
             console.log(error);
-        })
-        .finally(function () {
-            // always executed
         });
 }
 
 export function getCategories() {
-    // Make a request forv1 a user with a given ID
-    axios.get('/api/v1/categories')
+    return axios.get('/api/v1/categories')
         .then(function (response) {
-            // handle success
             categories.value = response.data
         })
         .catch(function (error) {
-            // handle error
             console.log(error);
-        })
-        .finally(function () {
-            // always executed
         });
 }
 
 export function getSubcategories() {
-    // Make a request for a user with a given ID
-    axios.get('/api/v1/subcategories')
+    return axios.get('/api/v1/subcategories') 
         .then(function (response) {
-            // handle success
             subcategories.value = response.data
         })
         .catch(function (error) {
-            // handle error
             console.log(error);
-        })
-        .finally(function () {
-            // always executed
         });
 }
+
 
 
 export const soundsFiltered = ref([])
@@ -78,27 +117,38 @@ export function changeSideBatState() {
     else {
         sideBarState.value = true
     }
-    console.log(sideBarState.value)
+    //console.log(sideBarState.value)
 }
+
+// export function filterSounds(filter) {
+//     soundsFiltered.value.length = 0
+//     //console.log("length")
+//     //console.log(sounds.value.length)
+//     //console.log(sounds.value)
+//     for (var i = 0; i < sounds.value.length; i++) {
+//         let name = sounds.value[i].name
+//         //console.log("name of sound checked")
+//             //console.log(sounds.value[i].name)
+//         if (name.includes(filter)) {
+//             //console.log("sounds matching name")
+//             //console.log(sounds.value[i])
+//             soundsFiltered.value.push(sounds.value[i])
+//         }
+//     }
+//     //console.log("HUHU")
+//     //console.log(soundsFiltered)
+// }
 
 export function filterSounds(filter) {
     soundsFiltered.value.length = 0
-    console.log("length")
-    console.log(sounds.value.length)
-    console.log(sounds.value)
-    for (var i = 0; i < sounds.value.length; i++) {
-        let name = sounds.value[i].name
-        console.log("name of sound checked")
-            console.log(sounds.value[i].name)
-        if (name.includes(filter)) {
-            console.log("sounds matching name")
-            console.log(sounds.value[i])
-            soundsFiltered.value.push(sounds.value[i])
+    for (let i = 0; i < sounds.value.length; i++) {
+        let sound = sounds.value[i];
+        if (sound && sound.name && sound.name.includes(filter)) {
+            soundsFiltered.value.push(sound);
         }
     }
-    console.log("HUHU")
-    console.log(soundsFiltered)
 }
+
 
 export function filterSubCategories(id, e) {
     subcategoriesFiltered.value.length = 0
@@ -126,7 +176,7 @@ export function filterSoundsBySubCatergorie(id, e) {
 }
 
 export function shoutNow(id, e) {
-    console.log(id)
+    //console.log(id)
     axios.post('/api/v1/play/'+id)
       .then(function (response) {
         console.log(response);
@@ -155,7 +205,7 @@ export function shoutNow(id, e) {
 //     // Make a request to fetch sounds, now using the base URL set in the Axios instance
 //     axios.get('/api/v1/sounds?limit=1000')  // Only provide the endpoint since baseURL is set globally
 //         .then(function (response) {
-//             console.log("response data");
+//             //console.log("response data");
 //             sounds.value = response.data;
 //             filterSounds("", sounds);  // Apply any additional filtering if needed
 //         })
@@ -203,7 +253,7 @@ export function shoutNow(id, e) {
 
 // export function changeSideBarState() {
 //     sideBarState.value = !sideBarState.value;
-//     console.log(sideBarState.value);
+//     //console.log(sideBarState.value);
 // }
 
 // export function filterSounds(filter) {
@@ -242,10 +292,10 @@ export function shoutNow(id, e) {
 // }
 
 // export function shoutNow(id, e) {
-//     console.log(id);
+//     //console.log(id);
 //     axios.post(`/api/v1/play/${id}`)
 //         .then(function (response) {
-//             console.log(response);
+//             //console.log(response);
 //         })
 //         .catch(function (error) {
 //             console.log(error);
@@ -309,7 +359,7 @@ export function shoutNow(id, e) {
 
 // export function changeSideBatState() {
 //     sideBarState.value = !sideBarState.value
-//     console.log(sideBarState.value)
+//     //console.log(sideBarState.value)
 // }
 
 // export function filterSounds(filter) {
@@ -348,6 +398,6 @@ export function shoutNow(id, e) {
 // }
 
 // export function shoutNow(id, e) {
-//     console.log("Shouting sound with ID:", id)
+//     //console.log("Shouting sound with ID:", id)
 //     // Fake action — replace with real request if needed
 // }
