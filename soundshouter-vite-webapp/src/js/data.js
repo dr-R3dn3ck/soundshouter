@@ -70,7 +70,7 @@ export function getSounds() {
         .then(function (response) {
             // console.log("response data")
             // console.log(response)
-            //console.log(response.data)
+            console.log(response.data)
             for (var i = 0; i < response.data.length; i++) {
                 sounds.value.push(response.data[i])
             }
